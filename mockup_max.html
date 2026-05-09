@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  .trmnl-screen { width: 800px; height: 480px; background-color: #ffffff; border: 10px solid #333; border-radius: 12px; display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; color: #000; }
+  .list { flex-grow: 1; align-content: start; }
+  .item { display: flex; flex-direction: column; align-items: center; text-align: center; border: 2px solid #ccc; border-radius: 12px; position: relative; }
+  .badge { position: absolute; background-color: #000; color: #fff; border: 3px solid #fff; font-weight: bold; }
+
+  /* 13+ Plants: Max Density Text Mode (3 Columns) */
+  .grid-max { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .grid-max .item { flex-direction: row; justify-content: space-between; align-items: center; text-align: left; padding: 10px 15px; border-radius: 6px; border: 1px solid #ccc; }
+  .grid-max .plant-image, .grid-max .emoji-fallback { display: none; }
+  .grid-max .title { font-size: 20px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; text-align: left; }
+  .grid-max .description { display: none; }
+  .grid-max .badge { position: relative; top: 0; right: 0; font-size: 14px; border: none; padding: 2px 6px; border-radius: 6px; }
+
+  .title_bar { border-top: 3px solid #000; padding-top: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 22px; font-weight: bold; margin-top: auto; }
+</style>
+</head>
+<body>
+<div class="trmnl-screen">
+  <div class="list grid-max">
+    <div class="item"><span class="title">African Violet</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Aloe</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Fern</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Iris</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Lily plant</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Monstera</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Tulip</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Snake Plant</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Cactus</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Fiddle Leaf</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Bonsai Tree</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Money Tree</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Spider Plant</span><span class="badge">💧 Thirsty!</span></div>
+    <div class="item"><span class="title">Pothos</span><span class="badge">💧 Thirsty!</span></div>
+  </div>
+  <div class="title_bar"><span>Plant Watering Schedule</span><span>Private Plugin</span></div>
+</div>
+</body>
+</html>

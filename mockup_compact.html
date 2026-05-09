@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  .trmnl-screen { width: 800px; height: 480px; background-color: #ffffff; border: 10px solid #333; border-radius: 12px; display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; color: #000; }
+  .list { flex-grow: 1; align-content: start; }
+  .item { display: flex; flex-direction: column; align-items: center; text-align: center; border: 2px solid #ccc; border-radius: 12px; position: relative; }
+  .badge { position: absolute; background-color: #000; color: #fff; border: 3px solid #fff; font-weight: bold; }
+  .plant-image { border-radius: 50%; object-fit: cover; filter: grayscale(100%) contrast(150%); border: 3px solid #000; }
+  .emoji-fallback { font-size: 50px; display: flex; justify-content: center; align-items: center; width: 80px; height: 80px; margin-bottom: 12px; }
+
+  /* 7-12 Plants: Compact Mode (4 Columns) */
+  .grid-compact { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; }
+  .grid-compact .item { padding: 15px 10px; border-radius: 8px; }
+  .grid-compact .plant-image, .grid-compact .emoji-fallback { width: 60px; height: 60px; margin-bottom: 8px; border-width: 2px; font-size: 35px; }
+  .grid-compact .title { font-size: 20px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 1.1; }
+  .grid-compact .description { font-size: 16px; color: #444; margin-top: 4px; }
+  .grid-compact .badge { top: -8px; right: -8px; font-size: 12px; padding: 2px 8px; border-radius: 12px; border-width: 2px; }
+  .title_bar { border-top: 3px solid #000; padding-top: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 22px; font-weight: bold; margin-top: auto; }
+</style>
+</head>
+<body>
+<div class="trmnl-screen">
+  <div class="list grid-compact">
+    <!-- African Violet: No image, uses emoji fallback -->
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <div class="emoji-fallback">🪴</div>
+      <span class="title">African Violet</span><span class="description">Next: 2026-05-09</span>
+    </div>
+    <!-- Aloe: No image, uses emoji fallback -->
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <div class="emoji-fallback">🪴</div>
+      <span class="title">Aloe</span><span class="description">Next: 2026-05-09</span>
+    </div>
+    <!-- Fern: No image, uses emoji fallback -->
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <div class="emoji-fallback">🪴</div>
+      <span class="title">Fern</span><span class="description">Next: 2026-05-12</span>
+    </div>
+    <!-- Iris: Has Image -->
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Iris_sanguinea_cultivar%2C_Wakehurst_Place%2C_UK_-_Diliff.jpg/500px-Iris_sanguinea_cultivar%2C_Wakehurst_Place%2C_UK_-_Diliff.jpg" />
+      <span class="title">Iris</span><span class="description">Next: 2026-05-09</span>
+    </div>
+    <!-- Money Plant: Has Airtable Image -->
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778371200000/Jy4EKW7dEp07MVvaK7Z31Q/wYcTyjUKNKblBz1oI5R1NCcUVPD9CwMuoqhoIaabrE-FhCzON6bFwHD5NuHdhIRKWgQCxkX-h5_reiWscKh6BPZepJLUG_lLMtk-dlmRzOeaIxYr-EjwoSzG4X9WI9BbESJbXj292DwaleBR1XX6UoOFiTY_sFVtn5e5OgSYSkKYxtobO-206A6FU5UXztwz/OY2cezlP9FtCbHjqjINwuKqk4Zaf4D8TjC6xq7qwaWA" />
+      <span class="title">Money plant</span><span class="description">Next: 2026-05-10</span>
+    </div>
+    <!-- Monstera: Has Image -->
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Starr_080731-9572_Monstera_deliciosa.jpg/500px-Starr_080731-9572_Monstera_deliciosa.jpg" />
+      <span class="title">Monstera</span><span class="description">Next: 2026-05-09</span>
+    </div>
+    <!-- Tulip: Has Image -->
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/%D7%A6%D7%91%D7%A2%D7%95%D7%A0%D7%99%D7%9D.JPG/500px-%D7%A6%D7%91%D7%A2%D7%95%D7%A0%D7%99%D7%9D.JPG" />
+      <span class="title">Tulip</span><span class="description">Next: 2026-05-09</span>
+    </div>
+  </div>
+  <div class="title_bar"><span>Plant Watering Schedule</span><span>Private Plugin</span></div>
+</div>
+</body>
+</html>

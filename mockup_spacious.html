@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  .trmnl-screen { width: 800px; height: 480px; background-color: #ffffff; border: 10px solid #333; border-radius: 12px; display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; color: #000; }
+  .list { flex-grow: 1; align-content: start; }
+  .item { display: flex; flex-direction: column; align-items: center; text-align: center; border: 2px solid #ccc; border-radius: 12px; position: relative; }
+  .badge { position: absolute; background-color: #000; color: #fff; border: 3px solid #fff; font-weight: bold; }
+  .plant-image { border-radius: 50%; object-fit: cover; filter: grayscale(100%) contrast(150%); border: 3px solid #000; }
+
+  /* 1-4 Plants: Spacious Mode (2 Columns) */
+  .grid-spacious { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+  .grid-spacious .item { padding: 25px 20px; }
+  .grid-spacious .plant-image { width: 100px; height: 100px; margin-bottom: 15px; }
+  .grid-spacious .title { font-size: 32px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 1.1; }
+  .grid-spacious .description { font-size: 24px; color: #444; margin-top: 10px; }
+  .grid-spacious .badge { top: -15px; right: -15px; font-size: 18px; padding: 6px 15px; border-radius: 25px; }
+  .title_bar { border-top: 3px solid #000; padding-top: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 22px; font-weight: bold; margin-top: auto; }
+</style>
+</head>
+<body>
+<div class="trmnl-screen">
+  <div class="list grid-spacious">
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Leaf_icon_15.svg/500px-Leaf_icon_15.svg.png" />
+      <span class="title">African Violet</span><span class="description">Next: 2026-05-09</span>
+    </div>
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Leaf_icon_15.svg/500px-Leaf_icon_15.svg.png" />
+      <span class="title">Aloe</span><span class="description">Next: 2026-05-09</span>
+    </div>
+  </div>
+  <div class="title_bar"><span>Plant Watering Schedule</span><span>Private Plugin</span></div>
+</div>
+</body>
+</html>

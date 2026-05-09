@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TRMNL Mockup</title>
+<style>
+  /* Simulate the TRMNL 800x480 e-ink screen */
+  body {
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  
+  .trmnl-screen {
+    width: 800px;
+    height: 480px;
+    background-color: #ffffff; /* E-ink white */
+    border: 10px solid #333; /* Device bezel */
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+    color: #000; /* E-ink black */
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TRMNL Layout styles */
+  .layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+  }
+
+  .list {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .item {
+    border-bottom: 2px solid #000;
+    padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .item:last-child {
+    border-bottom: none;
+  }
+
+  .plant-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(150%);
+    border: 3px solid #000;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .item .title {
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  .item .description {
+    font-size: 24px;
+    color: #444; /* Dithered gray on e-ink */
+  }
+
+  /* Title Bar (always at bottom of TRMNL screens) */
+  .title_bar {
+    border-top: 3px solid #000;
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: auto;
+  }
+
+  .title_bar .left-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .title_bar .image {
+    width: 32px;
+    height: 32px;
+    filter: grayscale(100%) contrast(200%);
+  }
+
+  .title_bar .instance {
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 16px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="trmnl-screen">
+  <div class="layout">
+    
+    <!-- Items list from Airtable -->
+    <div class="list">
+      <div class="item">
+        <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Lilium_candidum_1.jpg/500px-Lilium_candidum_1.jpg" />
+        <div class="content">
+          <span class="title" style="display: flex; align-items: center; gap: 15px;">
+            Lily
+          </span>
+          <span class="description">Last: 2026-04-30 &nbsp;|&nbsp; Next: 2026-05-13</span>
+        </div>
+      </div>
+      
+      <div class="item">
+        <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/The_ferns_of_Great_Britain%2C_and_their_allies_the_club-mosses%2C_pepperworts%2C_and_horsetails_%28Pl._2%29_%288515393495%29.jpg/500px-The_ferns_of_Great_Britain%2C_and_their_allies_the_club-mosses%2C_pepperworts%2C_and_horsetails_%28Pl._2%29_%288515393495%29.jpg" />
+        <div class="content">
+          <span class="title" style="display: flex; align-items: center; gap: 15px;">
+            Fern
+            <span style="font-size: 20px; background-color: #000; color: #fff; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-weight: normal;">💧 Thirsty!</span>
+          </span>
+          <span class="description">Last: 2026-05-09 &nbsp;|&nbsp; Next: 2026-05-10</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Title Bar -->
+    <div class="title_bar">
+      <div class="left-group">
+        <img class="image" src="https://trmnl.com/images/plugins/trmnl--render.svg" alt="logo" />
+        <span class="title">Plant Watering Schedule</span>
+      </div>
+      <span class="instance">Private Plugin</span>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

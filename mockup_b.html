@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  .trmnl-screen { width: 800px; height: 480px; background-color: #ffffff; border: 10px solid #333; border-radius: 12px; display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; color: #000; }
+  .list { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; flex-grow: 1; align-content: start; }
+  .item { display: flex; flex-direction: column; align-items: center; text-align: center; border: 2px solid #ccc; border-radius: 12px; padding: 20px 15px; position: relative; }
+  .plant-image { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; filter: grayscale(100%) contrast(150%); border: 3px solid #000; margin-bottom: 12px; }
+  .title { font-size: 26px; font-weight: 700; line-height: 1.1; }
+  .description { font-size: 20px; color: #444; margin-top: 8px; }
+  .badge { position: absolute; top: -12px; right: -12px; font-size: 16px; background-color: #000; color: #fff; padding: 4px 12px; border-radius: 20px; border: 3px solid #fff; font-weight: bold; }
+  .title_bar { border-top: 3px solid #000; padding-top: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 22px; font-weight: bold; margin-top: auto; }
+</style>
+</head>
+<body>
+<div class="trmnl-screen">
+  <div class="list">
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/%D7%A6%D7%91%D7%A2%D7%95%D7%A0%D7%99%D7%9D.JPG/500px-%D7%A6%D7%91%D7%A2%D7%95%D7%A0%D7%99%D7%9D.JPG" />
+      <span class="title">Tulip</span><span class="description">Next: 2026-05-09</span>
+    </div>
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Iris_sanguinea_cultivar%2C_Wakehurst_Place%2C_UK_-_Diliff.jpg/500px-Iris_sanguinea_cultivar%2C_Wakehurst_Place%2C_UK_-_Diliff.jpg" />
+      <span class="title">Iris</span><span class="description">Next: 2026-05-09</span>
+    </div>
+    <div class="item">
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Convallaria_majalis_inflorescence_-_Keila.jpg/500px-Convallaria_majalis_inflorescence_-_Keila.jpg" />
+      <span class="title">Lily plant</span><span class="description">Next: 2026-05-13</span>
+    </div>
+    <div class="item">
+      <span class="badge">💧 Thirsty!</span>
+      <img class="plant-image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/The_ferns_of_Great_Britain%2C_and_their_allies_the_club-mosses%2C_pepperworts%2C_and_horsetails_%28Pl._2%29_%288515393495%29.jpg/500px-The_ferns_of_Great_Britain%2C_and_their_allies_the_club-mosses%2C_pepperworts%2C_and_horsetails_%28Pl._2%29_%288515393495%29.jpg" />
+      <span class="title">Fern</span><span class="description">Next: 2026-05-12</span>
+    </div>
+  </div>
+  <div class="title_bar"><span>Plant Watering Schedule</span><span>Private Plugin</span></div>
+</div>
+</body>
+</html>
