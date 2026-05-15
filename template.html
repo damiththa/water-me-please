@@ -70,16 +70,14 @@
     <div class="list {{ grid_class }}">
       {% for item in items %}
         <div class="item">
-          {% if item.image_url %}
-            <img class="plant-image" src="{{ item.image_url }}" />
+          {% if item.i %}
+            <img class="plant-image" src="{{ item.i }}" />
           {% else %}
             <div class="emoji-fallback">🪴</div>
           {% endif %}
-          <span class="title">{{ item.plant_name }}</span>
-          {% if item.is_starving %}
-            <span class="badge">💧 Thirsty!</span>
-          {% endif %}
-          <span class="description">Next: {{ item.next_watering }}</span>
+          <span class="title">{{ item.n }}</span>
+          <span class="badge">💧 Thirsty!</span>
+          <span class="description">Next: {{ item.x }}</span>
         </div>
       {% endfor %}
     </div>

@@ -162,30 +162,43 @@ def main():
         if not image_url and plant_name != "Unknown":
             image_url = get_plant_image(plant_name)
         
-        items.append({
-            "plant_name": plant_name,
-            "last_watered": last_watered,
-            "next_watering": next_watering,
-            "image_url": image_url,
-            "is_starving": is_starving
-        })
+        if is_starving:
+            # Build minified item for TRMNL (Short keys to save bytes for Free Plan 2KB limit)
+            items.append({
+                "n": plant_name[:14],  # n = name
+                "x": next_watering[-5:] if next_watering != "N/A" else "N/A", # x = next (MM-DD only)
+                "i": image_url,        # i = image_url
+            })
         
     # Filter for only starving plants
-    items = [item for item in items if item["is_starving"]]
+    # Since we want to save bytes, we don't need 'is_starving' in the payload 
+    # because the script already filtered for them!
+    # (Note: Logic moved into the transform loop or filter here)
     
-    # Sort items alphabetically by plant_name
-    items.sort(key=lambda x: x["plant_name"].lower())
+    # Sort items alphabetically by name
+    items.sort(key=lambda x: x["n"].lower())
     
-    # TRMNL expects the payload inside a "merge_variables" object
-    payload = {
-        "merge_variables": {
-            "items": items
-        }
-    }
+    # --- TRMNL FREE PLAN OPTIMIZATION (Stay under 2KB) ---
+    import json
+    
+    # Attempt to fit as many images as possible
+    while True:
+        payload = {"merge_variables": {"items": items}}
+        size = len(json.dumps(payload))
+        
+        # If under 1950 bytes (safe margin), we are good
+        if size < 1950 or not any(item.get("i") for item in items):
+            break
+            
+        # Too big? Remove the last available image URL
+        for item in reversed(items):
+            if item.get("i"):
+                item["i"] = None
+                break
 
     # 4. Push to TRMNL
-    import json
-    print("\nGenerated Payload for TRMNL:")
+    print(f"\nPayload Size: {len(json.dumps(payload))} bytes (Limit: 2048)")
+    print("Generated Payload for TRMNL:")
     print(json.dumps(payload, indent=2))
     
     if not TRMNL_WEBHOOK_URL or "your_uuid_here" in TRMNL_WEBHOOK_URL:
