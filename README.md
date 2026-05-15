@@ -36,11 +36,17 @@ cp .env.example .env
 
 Edit `.env` and fill in your:
 - `AIRTABLE_API_KEY` — from [airtable.com/create/tokens](https://airtable.com/create/tokens)
-- `AIRTABLE_BASE_ID` — starts with `app`, visible in the Airtable URL
-- `AIRTABLE_TABLE_NAME` — exact table name (e.g. `Table 1`)
+- `AIRTABLE_BASE_ID` — starts with `app`
+- `AIRTABLE_TABLE_NAME` — e.g. `tbl-development_only`
 - `TRMNL_WEBHOOK_URL` — from your TRMNL Private Plugin dashboard
 
-### 3. Set up your Airtable table
+### 3. Set up GitHub Environments (For Automation)
+This project uses **GitHub Environments** to separate Development and Production.
+1. Go to **Settings -> Environments** in your repo.
+2. Create `Development` and `Production`.
+3. Add your secrets to each environment. The workflow automatically selects the environment based on the branch (`dev` vs `main`).
+
+### 4. Set up your Airtable table
 
 Your table needs these columns:
 
@@ -48,8 +54,11 @@ Your table needs these columns:
 |---|---|---|
 | `Plant Name` | Single line text | |
 | `Last Watered` | Date | YYYY-MM-DD |
-| `Next Watering Date` | Date | YYYY-MM-DD |
-| `Plant pic` | Attachment | Optional — upload your own photo |
+| `Next Watering Date` | Date | YYYY-MM-DD (Calculated by script) |
+| `Frequency` | Single line text | e.g. "7 days", "2 weeks" |
+| `Watered ?` | Checkbox | Check this to reset the cycle |
+| `Watered Date Hidden` | Last Modified Time | Scoped to `Watered ?` column |
+| `Plant pic` | Attachment | Optional |
 
 ### 4. Add the template to TRMNL
 
