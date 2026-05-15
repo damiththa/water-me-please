@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TRMNL Plant Watering — HousePlants Mockup</title>
+<style>
+  body { background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  .trmnl-screen { width: 800px; height: 480px; background-color: #ffffff; border: 10px solid #333; border-radius: 12px; display: flex; flex-direction: column; padding: 25px 30px 20px; box-sizing: border-box; color: #000; }
+  .list { flex-grow: 1; align-content: start; }
+  .item { display: flex; flex-direction: column; align-items: center; text-align: center; border: 2px solid #ccc; border-radius: 12px; position: relative; }
+  .badge { position: absolute; background-color: #000; color: #fff; border: 3px solid #fff; font-weight: bold; }
+  .plant-image { border-radius: 50%; object-fit: cover; filter: grayscale(100%) contrast(150%); border: 3px solid #000; }
+
+  /* 8 plants → Compact 4-column */
+  .grid-compact { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+  .grid-compact .item { padding: 14px 10px; border-radius: 8px; }
+  .grid-compact .plant-image { width: 60px; height: 60px; margin-bottom: 8px; border-width: 2px; }
+  .grid-compact .title { font-size: 19px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 1.2; }
+  .grid-compact .description { font-size: 15px; color: #444; margin-top: 4px; }
+  .grid-compact .badge { top: -9px; right: -9px; font-size: 12px; padding: 3px 9px; border-radius: 12px; border-width: 2px; }
+
+  .title_bar { border-top: 3px solid #000; padding-top: 14px; display: flex; align-items: center; justify-content: space-between; font-size: 20px; font-weight: bold; margin-top: auto; }
+</style>
+</head>
+<body>
+<div class="trmnl-screen">
+  <div class="list grid-compact">
+    <div class="item"><span class="badge">💧 Thirsty!</span><img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/5DyhXIeeYajZKzakXZDeCw/nzV-SxzF9ku5Lz2bvMxEyxUTKUpMi7T7f7re_XWUwV4gyH4M5U9fTeO5ju1Su9cW8yDOda9qMRHGQmyy7fDYoZmvBYtjIfAV_OxqP42J0Iiw5NnhPwCFv9HZmVH67i2VjYnTa5oIO32vUUmHFESomGUzYaKXCkR7SgnRjMwUNPzrYLzzDYn3sYR0lhAyLW55/lScj-sG5oNh2iT7cRr7Y9lZuZbSImbxonLTS2XdilcQ" /><span class="title">Dwarf Bamboo</span><span class="description">Next: May 15</span></div>
+    <div class="item"><span class="badge">💧 Thirsty!</span><img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/rQKmzHfzIjTgmXtO6CWXUg/mG1qCx-WM6uTOG3rP-wQ5bfjONBgIDYJPjZoJLngJazF2Bvhhzh_GRdIzKie5KNVHbcqTEO8zidL42upjJFhh8lwuwa3oSpIsh0ZFEyjopnttvQ2OXIho4LIt5PpEFTZykQhdcBEMCwhKztmI710HRO86LeFJJSw8fb4am_es9rVmxGPYcs8N-HyuuYWBa-o/1zqNtHBt_SXZvcgwwbh4PjBxQ5EPdGhE_QIXmQIbVKU" /><span class="title">Dwarf Umbrella</span><span class="description">Next: May 15</span></div>
+    <div class="item"><span class="badge">💧 Thirsty!</span><img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/3836nWlMTB7IXFj8d-m5Lw/Z2ghCdspGreu1F2f9jXe9pD2oExH1gUcZ269JCK8Rt2IWk8fcaHQS_ptdsyT74rWcuixcnvSRO4T8-zUERYbO4Z71z5f5R8Rp_n5PZYSKSzR8YJIzz5BKr849ScF7_gyHj2uXE3SuYH0PFg3HucjFKiJ88s22b_mevo4I1nHXk_dZQNFlEX47mLjIYNCp1RY/nZwiGMYi2iVnMbh026MGpUH9tvPulxetO-oUHVXtCrU" /><span class="title">Hydrogen propagate</span><span class="description">Next: May 15</span></div>
+    <div class="item"><span class="badge">💧 Thirsty!</span><img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/L6PsGNich4N092J-lvxSfA/LbJNQwyG4IUYFvZLBHQYhf-4COYtu0NjlN_M5pLmHGvXaQwAQYNp4gJEqlZFuA46U7tmRUsgoMuCSFFZgtIDk9By2qF52YwlRbQ5ggOQ4JJmHp99iSu9FgjN6rPQg3lJDHzbPGUCcqEcs2K-GLuC03H0WRAk4F09EbbJxmG6HBkWhr5yZR-dKn5JxfR2hGPe/nblaeELZ-1TuxnBOgF9ZembYivxDA29wIBiEpqtIupU" /><span class="title">Lilly</span><span class="description">Next: May 15</span></div>
+    <div class="item"><span class="badge">💧 Thirsty!</span><img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/eEf3ertlQCBBBG6Rs39pOQ/gZp2Sr09idcSJjKiQjHNOw7RhmC3LrnJXofGXGaReiSgChbe-AwWPf3Xn4dFIF67Jcg6RM-zXmQCPPoKVUfAzdYADTXxsDfcyCpoeXhdNRgGEVX5pBLrnimXmixgwUHL7Y-EZ8j8obpZb7sHDVk32VfINKUmDAaKeY_90Psc4ljx-e4MuSs1BA1XF0w8M8-P/3kYrhkJhDJI6mFuov_ftwJQ3CUyJXcI3s5h4Wa3m9Hg" /><span class="title">Oak leaf ivy</span><span class="description">Next: May 15</span></div>
+    <div class="item"><span class="badge">💧 Thirsty!</span><img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/UUMv8SSwJpkOtWGY3A2saw/E4StYT1jOKrJkEfe8xiTlL83YauvvKdoWxvLkndhobRdpFCXizzC1hauTFVOaDX7-GKKbtynWEEYGXimgP7mu-Xbd_gFG_QBe5L9Kubzjs7daa2aJnlyRdX6TvxF36zgWHOzBPk1VP-e-ZvGAVuxHEQEjDb94Ozvej2XIV7bOVRw3RVGkdFn4ZbjJH-e0AvN/VljYfFAjXnayzihBTQxV0gkW92ugFysNsaf0T6ACeD8" /><span class="title">ZZ plant 1</span><span class="description">Next: May 15</span></div>
+    <div class="item"><span class="badge">💧 Thirsty!</span><img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/vDF4WjC3moUDwGPHD1epdg/cRTDe194qaKdtpXKDoYxEPLZkYsK3LnIibBbv20na0c3jp2Ai3hCdtjkDYNmH6653E1fNyz1iwbOWxSKqRFvnoQkFJeONl0T0L-XxKOEcLiV-u2jpB_fx1W59flfq335Vfrqo5Y35tidBiMoOxb1_oWDF5YZW-JR531vpSs1Ya5S-mjmwU3PixSuN5rsmv0P/_1d7uhwI9TPU-XoKMMzi8BMIRQYeD5acmRIRzpKKSso" /><span class="title">ZZ plant 2</span><span class="description">Next: May 15</span></div>
+    <div class="item"><span class="badge">💧 Thirsty!</span><img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/owEXQAS5iw2WNQ4W8DOXMA/Wys3nDdR9uTDkl3jKY1cL_gdthhiaidS_esdU4pR6Tj3kWYvCjJsfOIcAoFOJnMgHTzw75l-AHOusq3xC5Huy3UJUmcksOd6XgGh4Hxzaxl3hatBzcq5iiu-xWVHkeHBmlKDtsbsQeKrvCT9pjWwXX6ffEL-afUPifvMrXilFNLPK5c-VVZekeCdV4ERRqNy/3R1TNjF0KH4WIPGlRH2N1Phk8SX1knknpabhkJJwJIc" /><span class="title">ZZ plant 3</span><span class="description">Next: May 15</span></div>
+  </div>
+  <div class="title_bar"><span>🪴 HousePlants Dashboard</span><span>8 Thirsty Plants</span></div>
+</div>
+</body>
+</html>
