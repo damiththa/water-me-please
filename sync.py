@@ -1,10 +1,32 @@
 import os
 import requests
+import re
 from pyairtable import Api
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 import urllib.parse
 import time
+
+def parse_frequency(freq_str):
+    """Smart parse frequency strings like '7 days', '1 week', '14'"""
+    if not freq_str:
+        return None
+    
+    freq_str = str(freq_str).lower().strip()
+    
+    # Try to find a number
+    match = re.search(r'(\d+)', freq_str)
+    if not match:
+        return None
+    
+    val = int(match.group(1))
+    
+    if 'week' in freq_str:
+        return val * 7
+    elif 'month' in freq_str:
+        return val * 30 # Simple approximation
+    else:
+        return val # Default to days
 
 def get_plant_image(plant_name):
     """Fetch a thumbnail image of the plant from Wikipedia API"""
@@ -58,12 +80,55 @@ def main():
     table = api.table(AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME)
     
     try:
-        # You can customize this query. For example, sorting or using a specific view:
-        # records = table.all(view="Grid view", sort=["Date"])
         records = table.all()
     except Exception as e:
         print(f"Failed to fetch from Airtable: {e}")
         return
+
+    # --- Maintenance: Handle "Watered ?" Checkboxes ---
+    updates = []
+    for record in records:
+        fields = record.get("fields", {})
+        if fields.get("Watered ?") is True:
+            plant_name = fields.get("Plant Name", "Unknown")
+            print(f"Maintenance: {plant_name} marked as watered. Updating dates...")
+            
+            # 1. Determine the "Last Watered" date
+            # Use the hidden modified date if available, else today
+            raw_hidden_date = fields.get("Watered Date Hidden")
+            if raw_hidden_date:
+                # Airtable modified time is ISO 8601 string (UTC)
+                new_last_watered = raw_hidden_date[:10] # Just the date YYYY-MM-DD
+            else:
+                new_last_watered = datetime.now().strftime("%Y-%m-%d")
+            
+            # 2. Calculate "Next Watering Date"
+            freq_str = fields.get("Frequency")
+            days = parse_frequency(freq_str)
+            
+            update_fields = {
+                "Last Watered": new_last_watered,
+                "Watered ?": False
+            }
+            
+            if days:
+                last_dt = datetime.strptime(new_last_watered, "%Y-%m-%d")
+                next_dt = last_dt + timedelta(days=days)
+                update_fields["Next Watering Date"] = next_dt.strftime("%Y-%m-%d")
+            
+            updates.append({
+                "id": record["id"],
+                "fields": update_fields
+            })
+            
+    if updates:
+        print(f"Batch updating {len(updates)} records in Airtable...")
+        try:
+            table.batch_update(updates)
+            # Re-fetch records to reflect updates for TRMNL rendering
+            records = table.all()
+        except Exception as e:
+            print(f"Failed to update Airtable maintenance: {e}")
 
     # 3. Transform the data for TRMNL
     # (Customize this logic based on your specific Airtable columns)
