@@ -9,6 +9,8 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    # Select environment based on branch (main -> Production, others -> Development)
+    environment: ${{ github.ref_name == 'main' && 'Production' || 'Development' }}
 
     steps:
       - name: Checkout repository
@@ -17,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5.6.0
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
