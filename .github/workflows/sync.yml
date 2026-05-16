@@ -1,9 +1,9 @@
 name: Sync Plant Watering Schedule to TRMNL
 
 on:
-  # schedule:
-  #   # 6:15 AM EST = 11:15 AM UTC
-  #   - cron: '15 11 * * *'
+  schedule:
+    # 6:15 AM EST = 11:15 AM UTC
+    - cron: '15 11 * * *'
   workflow_dispatch: # Allow manual trigger from GitHub UI
 
 jobs:
