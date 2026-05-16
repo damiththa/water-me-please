@@ -164,9 +164,18 @@ def main():
         
         if is_starving:
             # Build minified item for TRMNL (Short keys to save bytes for Free Plan 2KB limit)
+            # Format date as M/D (e.g., 5/15)
+            formatted_date = "N/A"
+            if next_watering != "N/A":
+                try:
+                    d = datetime.strptime(next_watering, "%Y-%m-%d")
+                    formatted_date = f"{d.month}/{d.day}"
+                except:
+                    formatted_date = next_watering[-5:].replace("-", "/")
+
             items.append({
                 "n": plant_name[:14],  # n = name
-                "x": next_watering[-5:] if next_watering != "N/A" else "N/A", # x = next (MM-DD only)
+                "x": formatted_date,   # x = next
                 "i": image_url,        # i = image_url
             })
         
