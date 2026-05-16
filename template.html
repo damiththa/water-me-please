@@ -58,15 +58,28 @@
     display: flex; justify-content: space-between; align-items: center;
     gap: 20px;
   }
+
+  /* Zero Plants - Jazzed Up */
+  .zero-plants { 
+    display: flex; flex-direction: column; 
+    align-items: center; justify-content: center; 
+    flex-grow: 1; text-align: center;
+    background: #fff; border-radius: 12px;
+    border: 6px dashed #000; margin-bottom: 15px;
+  }
+  .zero-icon { font-size: 110px; margin-bottom: 20px; }
+  .zero-title { font-size: 48px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
+  .zero-desc { font-size: 22px; font-weight: 700; color: #444; padding: 0 40px; }
 </style>
 
 {% assign count = items.size %}
 
 <div class="layout">
   {% if count == 0 %}
-    <div style="flex-grow:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-      <div style="font-size:100px;">🍹</div>
-      <div style="font-size:40px; font-weight:900;">All Hydrated!</div>
+    <div class="zero-plants">
+      <div class="zero-icon">🍹</div>
+      <div class="zero-title">All Hydrated!</div>
+      <div class="zero-desc">Your indoor jungle is happy. Time to relax! 🌿✨</div>
     </div>
   {% else %}
     <div class="grid">

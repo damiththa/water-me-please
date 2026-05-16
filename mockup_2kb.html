@@ -68,77 +68,26 @@
     display: flex; justify-content: space-between; align-items: center;
     gap: 20px;
   }
+
+  /* Zero Plants - Jazzed Up */
+  .zero-plants { 
+    display: flex; flex-direction: column; 
+    align-items: center; justify-content: center; 
+    flex-grow: 1; text-align: center;
+    background: #fff; border-radius: 12px;
+    border: 6px dashed #000; margin-bottom: 15px;
+  }
+  .zero-icon { font-size: 110px; margin-bottom: 20px; }
+  .zero-title { font-size: 48px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
+  .zero-desc { font-size: 22px; font-weight: 700; color: #444; padding: 0 40px; }
 </style>
 </head>
 <body>
 <div class="layout">
-  <div class="grid">
-    <!-- First 5 plants: Images included (under 2KB) -->
-    <div class="item">
-      <div class="thirsty-flag">💧</div>
-      <div class="img-container">
-        <img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/5DyhXIeeYajZKzakXZDeCw/nzV-SxzF9ku5Lz2bvMxEyxUTKUpMi7T7f7re_XWUwV4gyH4M5U9fTeO5ju1Su9cW8yDOda9qMRHGQmyy7fDYoZmvBYtjIfAV_OxqP42J0Iiw5NnhPwCFv9HZmVH67i2VjYnTa5oIO32vUUmHFESomGUzYaKXCkR7SgnRjMwUNPzrYLzzDYn3sYR0lhAyLW55/lScj-sG5oNh2iT7cRr7Y9lZuZbSImbxonLTS2XdilcQ" />
-      </div>
-      <div class="name">Dwarf Bamboo</div>
-      <div class="date">Due: 5/15</div>
-    </div>
-    <div class="item">
-      <div class="thirsty-flag">💧</div>
-      <div class="img-container">
-        <img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/rQKmzHfzIjTgmXtO6CWXUg/mG1qCx-WM6uTOG3rP-wQ5bfjONBgIDYJPjZoJLngJazF2Bvhhzh_GRdIzKie5KNVHbcqTEO8zidL42upjJFhh8lwuwa3oSpIsh0ZFEyjopnttvQ2OXIho4LIt5PpEFTZykQhdcBEMCwhKztmI710HRO86LeFJJSw8fb4am_es9rVmxGPYcs8N-HyuuYWBa-o/1zqNtHBt_SXZvcgwwbh4PjBxQ5EPdGhE_QIXmQIbVKU" />
-      </div>
-      <div class="name">Dwarf Umbrella</div>
-      <div class="date">Due: 5/15</div>
-    </div>
-    <div class="item">
-      <div class="thirsty-flag">💧</div>
-      <div class="img-container">
-        <img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/3836nWlMTB7IXFj8d-m5Lw/Z2ghCdspGreu1F2f9jXe9pD2oExH1gUcZ269JCK8Rt2IWk8fcaHQS_ptdsyT74rWcuixcnvSRO4T8-zUERYbO4Z71z5f5R8Rp_n5PZYSKSzR8YJIzz5BKr849ScF7_gyHj2uXE3SuYH0PFg3HucjFKiJ88s22b_mevo4I1nHXk_dZQNFlEX47mLjIYNCp1RY/nZwiGMYi2iVnMbh026MGpUH9tvPulxetO-oUHVXtCrU" />
-      </div>
-      <div class="name">Hydrogen prop.</div>
-      <div class="date">Due: 5/15</div>
-    </div>
-    <div class="item">
-      <div class="thirsty-flag">💧</div>
-      <div class="img-container">
-        <img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/L6PsGNich4N092J-lvxSfA/LbJNQwyG4IUYFvZLBHQYhf-4COYtu0NjlN_M5pLmHGvXaQwAQYNp4gJEqlZFuA46U7tmRUsgoMuCSFFZgtIDk9By2qF52YwlRbQ5ggOQ4JJmHp99iSu9FgjN6rPQg3lJDHzbPGUCcqEcs2K-GLuC03H0WRAk4F09EbbJxmG6HBkWhr5yZR-dKn5JxfR2hGPe/nblaeELZ-1TuxnBOgF9ZembYivxDA29wIBiEpqtIupU" />
-      </div>
-      <div class="name">Lilly</div>
-      <div class="date">Due: 5/15</div>
-    </div>
-    <div class="item">
-      <div class="thirsty-flag">💧</div>
-      <div class="img-container">
-        <img class="plant-image" src="https://v5.airtableusercontent.com/v3/u/53/53/1778889600000/eEf3ertlQCBBBG6Rs39pOQ/gZp2Sr09idcSJjKiQjHNOw7RhmC3LrnJXofGXGaReiSgChbe-AwWPf3Xn4dFIF67Jcg6RM-zXmQCPPoKVUfAzdYADTXxsDfcyCpoeXhdNRgGEVX5pBLrnimXmixgwUHL7Y-EZ8j8obpZb7sHDVk32VfINKUmDAaKeY_90Psc4ljx-e4MuSs1BA1XF0w8M8-P/3kYrhkJhDJI6mFuov_ftwJQ3CUyJXcI3s5h4Wa3m9Hg" />
-      </div>
-      <div class="name">Oak leaf ivy</div>
-      <div class="date">Due: 5/15</div>
-    </div>
-    <!-- Last 3 plants: Images dropped to stay under 2KB -->
-    <div class="item">
-      <div class="thirsty-flag">💧</div>
-      <div class="img-container">
-        <span class="emoji">🪴</span>
-      </div>
-      <div class="name">ZZ plant 1</div>
-      <div class="date">Due: 5/15</div>
-    </div>
-    <div class="item">
-      <div class="thirsty-flag">💧</div>
-      <div class="img-container">
-        <span class="emoji">🪴</span>
-      </div>
-      <div class="name">ZZ plant 2</div>
-      <div class="date">Due: 5/15</div>
-    </div>
-    <div class="item">
-      <div class="thirsty-flag">💧</div>
-      <div class="img-container">
-        <span class="emoji">🪴</span>
-      </div>
-      <div class="name">ZZ plant 3</div>
-      <div class="date">Due: 5/15</div>
-    </div>
+  <div class="zero-plants">
+    <div class="zero-icon">🍹</div>
+    <div class="zero-title">All Hydrated!</div>
+    <div class="zero-desc">Your indoor jungle is happy. Time to relax! 🌿✨</div>
   </div>
 
   <div class="footer">
