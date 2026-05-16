@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import re
 from pyairtable import Api
@@ -6,6 +7,19 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import urllib.parse
 import time
+
+def download_image(url, save_path):
+    """Download an image from a URL and save it locally."""
+    try:
+        response = requests.get(url, stream=True, timeout=10)
+        if response.status_code == 200:
+            with open(save_path, 'wb') as f:
+                for chunk in response.iter_content(1024):
+                    f.write(chunk)
+            return True
+    except Exception as e:
+        print(f"Error downloading image {url}: {e}")
+    return False
 
 def parse_frequency(freq_str):
     """Smart parse frequency strings like '7 days', '1 week', '14'"""
@@ -76,6 +90,11 @@ def main():
     print(f"Fetching data from Airtable base '{AIRTABLE_BASE_ID}', table '{AIRTABLE_TABLE_NAME}'...")
 
     # 2. Fetch data from Airtable
+    # Ensure assets directory exists
+    assets_dir = "assets"
+    if not os.path.exists(assets_dir):
+        os.makedirs(assets_dir)
+
     api = Api(AIRTABLE_API_KEY)
     table = api.table(AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME)
     
@@ -156,15 +175,25 @@ def main():
         
         if is_starving:
             # Fetch plant image ONLY for thirsty plants: 1. Airtable, 2. Wikipedia, 3. None
-            image_url = None
+            remote_url = None
             if plant_pic and isinstance(plant_pic, list) and len(plant_pic) > 0:
-                image_url = plant_pic[0].get("url")
+                remote_url = plant_pic[0].get("url")
                 
-            if not image_url and plant_name != "Unknown":
-                image_url = get_plant_image(plant_name)
+            if not remote_url and plant_name != "Unknown":
+                remote_url = get_plant_image(plant_name)
 
-            # Build minified item for TRMNL (Short keys to save bytes for Free Plan 2KB limit)
-            # Format date as M/D (e.g., 5/15)
+            # Local Image Hosting Logic
+            image_url = None
+            if remote_url:
+                record_id = record.get("id", "unknown")
+                local_filename = f"{record_id}.jpg"
+                local_path = os.path.join(assets_dir, local_filename)
+                
+                if download_image(remote_url, local_path):
+                    # Use raw GitHub URL for the final payload
+                    image_url = f"https://raw.githubusercontent.com/damiththa/water-me-please/main/assets/{local_filename}"
+
+            # Build minified item for TRMNL
             formatted_date = "N/A"
             if next_watering != "N/A":
                 try:
@@ -187,46 +216,27 @@ def main():
     # Sort items alphabetically by name
     items.sort(key=lambda x: x["n"].lower())
     
-    # --- TRMNL FREE PLAN OPTIMIZATION (Stay under 2KB) ---
+    # 4. Final Payload (removed the 2KB image-stripping logic as URLs are now short)
     import json
+    payload = {"merge_variables": {"items": items}}
     
-    # Attempt to fit as many images as possible
-    while True:
-        payload = {"merge_variables": {"items": items}}
-        size = len(json.dumps(payload))
-        
-        # If under 1950 bytes (safe margin), we are good
-        if size < 1950 or not any(item.get("i") for item in items):
-            break
-            
-        # Too big? Remove the last available image URL
-        for item in reversed(items):
-            if item.get("i"):
-                item["i"] = None
-                break
-
-    # 4. Push to TRMNL
     print(f"\nPayload Size: {len(json.dumps(payload))} bytes (Limit: 2048)")
-    print("Generated Payload for TRMNL:")
-    print(json.dumps(payload, indent=2))
-    
+    print(f"Sending payload to TRMNL Webhook (contains {len(items)} plants)...")
+
     if not TRMNL_WEBHOOK_URL or "your_uuid_here" in TRMNL_WEBHOOK_URL:
-        print("\nSkipping TRMNL Webhook since TRMNL_WEBHOOK_URL is not configured yet.")
+        print("\nSkipping TRMNL Webhook since TRMNL_WEBHOOK_URL is not configured.")
         return
 
-    print("\nSending payload to TRMNL...")
     try:
         response = requests.post(
             TRMNL_WEBHOOK_URL,
             json=payload,
             headers={"Content-Type": "application/json"}
         )
-        response.raise_for_status() # Raise an exception for bad status codes
+        response.raise_for_status()
         print("Successfully updated TRMNL plugin!")
     except requests.exceptions.RequestException as e:
         print(f"Failed to update TRMNL plugin. Error: {e}")
-        if response is not None:
-            print(f"Response text: {response.text}")
 
 if __name__ == "__main__":
     main()

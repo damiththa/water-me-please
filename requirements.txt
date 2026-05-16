@@ -1,3 +1,2 @@
-pyairtable
 requests
-python-dotenv
+Pillow
