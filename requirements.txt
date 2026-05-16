@@ -1,2 +1,4 @@
 requests
+pyairtable
 Pillow
+python-dotenv

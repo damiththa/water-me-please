@@ -182,13 +182,14 @@ def main():
             if not remote_url and plant_name != "Unknown":
                 remote_url = get_plant_image(plant_name)
 
-            # Local Image Hosting Logic
+            # Local Image Hosting Logic (Always refresh to ensure latest photo from Airtable)
             image_url = None
             if remote_url:
                 record_id = record.get("id", "unknown")
                 local_filename = f"{record_id}.jpg"
                 local_path = os.path.join(assets_dir, local_filename)
                 
+                # Always download and overwrite to ensure we have the latest user photo
                 if download_image(remote_url, local_path):
                     # Use raw GitHub URL for the final payload
                     image_url = f"https://raw.githubusercontent.com/damiththa/water-me-please/main/assets/{local_filename}"
