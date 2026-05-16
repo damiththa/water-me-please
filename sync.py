@@ -154,15 +154,15 @@ def main():
             except ValueError:
                 pass
         
-        # Fetch plant image: 1. Airtable, 2. Wikipedia, 3. None
-        image_url = None
-        if plant_pic and isinstance(plant_pic, list) and len(plant_pic) > 0:
-            image_url = plant_pic[0].get("url")
-            
-        if not image_url and plant_name != "Unknown":
-            image_url = get_plant_image(plant_name)
-        
         if is_starving:
+            # Fetch plant image ONLY for thirsty plants: 1. Airtable, 2. Wikipedia, 3. None
+            image_url = None
+            if plant_pic and isinstance(plant_pic, list) and len(plant_pic) > 0:
+                image_url = plant_pic[0].get("url")
+                
+            if not image_url and plant_name != "Unknown":
+                image_url = get_plant_image(plant_name)
+
             # Build minified item for TRMNL (Short keys to save bytes for Free Plan 2KB limit)
             # Format date as M/D (e.g., 5/15)
             formatted_date = "N/A"
