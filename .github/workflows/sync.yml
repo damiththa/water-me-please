@@ -9,6 +9,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/main'
     # Select environment based on branch (main -> Production, others -> Development)
     environment: ${{ github.ref_name == 'main' && 'Production' || 'Development' }}
 
