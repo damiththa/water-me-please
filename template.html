@@ -10,19 +10,19 @@
 
   /* Shared Grid Styles */
   .list { flex-grow: 1; align-content: center; }
-  .item { display: flex; flex-direction: column; align-items: center; text-align: center; border: 2px solid #ccc; border-radius: 12px; position: relative; }
-  .badge { position: absolute; background-color: #000; color: #fff; border: 3px solid #fff; font-weight: bold; }
-  .plant-image { border-radius: 50%; object-fit: cover; filter: grayscale(100%) contrast(150%); border: 3px solid #000; }
-  .title { font-weight: 700; line-height: 1.2; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .description { color: #444; }
+  .item { display: flex; flex-direction: column; align-items: center; text-align: center; border: 4px solid #000; border-radius: 12px; position: relative; background: #fff; }
+  .badge { position: absolute; background-color: #000; color: #fff; border: 3px solid #fff; font-weight: 900; }
+  .plant-image { border-radius: 50%; object-fit: cover; filter: grayscale(100%) contrast(250%); border: 3px solid #000; }
+  .title { font-weight: 900; line-height: 1.1; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .description { font-weight: 700; color: #000; }
 
   /* 7-12 Plants: Compact Mode (4 Columns) */
-  .grid-compact { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
-  .grid-compact .item { padding: 15px 10px; border-radius: 8px; }
-  .grid-compact .plant-image, .grid-compact .emoji-fallback { width: 65px; height: 65px; margin-bottom: 10px; border-width: 2px; font-size: 38px; display: flex; align-items: center; justify-content: center; }
-  .grid-compact .title { font-size: 20px; }
-  .grid-compact .description { font-size: 16px; margin-top: 4px; }
-  .grid-compact .badge { top: -10px; right: -10px; font-size: 12px; padding: 3px 10px; border-radius: 12px; }
+  .grid-compact { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; }
+  .grid-compact .item { padding: 12px 8px; border-radius: 10px; }
+  .grid-compact .plant-image, .grid-compact .emoji-fallback { width: 70px; height: 70px; margin-bottom: 8px; border-width: 3px; font-size: 42px; display: flex; align-items: center; justify-content: center; }
+  .grid-compact .title { font-size: 22px; }
+  .grid-compact .description { font-size: 17px; margin-top: 2px; }
+  .grid-compact .badge { top: -12px; right: -12px; font-size: 14px; padding: 4px 10px; border-radius: 15px; }
 
   /* 1-4 Plants: Spacious Mode (2 Columns) */
   .grid-spacious { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
