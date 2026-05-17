@@ -43,32 +43,51 @@ def parse_frequency(freq_str):
         return val # Default to days
 
 def get_plant_image(plant_name):
-    """Fetch a thumbnail image of the plant from Wikipedia API"""
+    """Fetch a thumbnail image of the plant from Wikipedia API.
+    Returns None gracefully if no image is found."""
     try:
         time.sleep(1) # Be nice to Wikipedia API
         headers = {'User-Agent': 'TRMNL-Water-Me-Please/1.0'}
         # Search for the page title first
         encoded_name = urllib.parse.quote(f"{plant_name} plant")
         search_url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={encoded_name}&utf8=&format=json"
-        response = requests.get(search_url, headers=headers)
+        response = requests.get(search_url, headers=headers, timeout=10)
+        
+        if response.status_code != 200 or not response.text.strip():
+            print(f"  ℹ️  No Wikipedia result for '{plant_name}' (no response)")
+            return None
+        
         data = response.json()
         
         if not data.get('query', {}).get('search'):
+            print(f"  ℹ️  No Wikipedia result for '{plant_name}'")
             return None
             
         title = data['query']['search'][0]['title']
         
         # Get the main image for the title
         image_url = f"https://en.wikipedia.org/w/api.php?action=query&titles={title}&prop=pageimages&format=json&pithumbsize=500"
-        response = requests.get(image_url, headers=headers)
+        response = requests.get(image_url, headers=headers, timeout=10)
+        
+        if response.status_code != 200 or not response.text.strip():
+            return None
+        
         data = response.json()
         
         pages = data.get('query', {}).get('pages', {})
         for page_id in pages:
             if 'thumbnail' in pages[page_id]:
                 return pages[page_id]['thumbnail']['source']
+        
+        print(f"  ℹ️  No image found on Wikipedia for '{plant_name}'")
+    except (ValueError, KeyError):
+        # JSON decode errors or missing keys — plant simply has no Wikipedia image
+        print(f"  ℹ️  Could not parse Wikipedia response for '{plant_name}' (skipping)")
+    except requests.exceptions.RequestException:
+        # Network timeout or connection error
+        print(f"  ℹ️  Wikipedia lookup timed out for '{plant_name}' (skipping)")
     except Exception as e:
-        print(f"Error fetching image for {plant_name}: {e}")
+        print(f"  ℹ️  Unexpected issue looking up '{plant_name}': {e}")
         
     return None
 
