@@ -215,18 +215,23 @@ def main():
 
             # Build minified item for TRMNL
             formatted_date = "N/A"
+            is_overdue = False
             if next_watering != "N/A":
                 try:
                     d = datetime.strptime(next_watering, "%Y-%m-%d")
                     formatted_date = f"{d.month}/{d.day}"
+                    is_overdue = d.date() < datetime.now().date()
                 except:
                     formatted_date = next_watering[-5:].replace("-", "/")
 
-            items.append({
-                "n": plant_name[:14],  # n = name
-                "x": formatted_date,   # x = next
+            item_data = {
+                "n": plant_name[:20],  # n = name (increased from 14 to 20)
+                "x": formatted_date,   # x = next watering date
                 "i": image_url,        # i = image_url
-            })
+            }
+            if is_overdue:
+                item_data["o"] = True  # o = overdue flag
+            items.append(item_data)
         
     # Filter for only starving plants
     # Since we want to save bytes, we don't need 'is_starving' in the payload 
