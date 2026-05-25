@@ -17,21 +17,22 @@
   /* Adaptive Grid */
   .grid { 
     display: grid;
-    gap: 10px; flex-grow: 1; 
+    gap: 10px; flex-grow: 1;
+    justify-content: center;
   }
-  .grid-4 { grid-template-columns: repeat(4, 1fr); }
-  .grid-5 { grid-template-columns: repeat(5, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, minmax(0, 170px)); }
+  .grid-5 { grid-template-columns: repeat(5, minmax(0, 140px)); }
 
   .item { 
     border: 3px solid #000; border-radius: 8px;
     display: flex; flex-direction: column; 
-    align-items: center; justify-content: center;
-    padding: 8px; position: relative;
+    align-items: center; justify-content: flex-start;
+    padding: 12px 8px 8px; position: relative;
     overflow: hidden;
   }
 
   .img-container {
-    width: 55px; height: 55px; margin-bottom: 6px;
+    width: 65px; height: 65px; margin-bottom: 6px;
     border: 2px solid #000; border-radius: 50%;
     overflow: hidden; display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
@@ -39,7 +40,7 @@
 
   .plant-image { 
     width: 100%; height: 100%; object-fit: cover;
-    filter: grayscale(100%) contrast(200%); 
+    filter: grayscale(100%) contrast(130%) brightness(110%); 
   }
 
   .emoji { font-size: 32px; }
@@ -143,7 +144,7 @@
     <div class="item overdue">
       <div class="thirsty-flag">💧</div>
       <div class="img-container">
-        <img class="plant-image" src="https://raw.githubusercontent.com/damiththa/water-me-please/main/assets/recOlbNKkrRpXRb6y.jpg" />
+        <img class="plant-image image-dither" src="https://raw.githubusercontent.com/damiththa/water-me-please/main/assets/recOlbNKkrRpXRb6y.jpg" />
       </div>
       <div class="name">Money plant</div>
       <div class="date">Due: 5/10</div>
