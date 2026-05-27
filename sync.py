@@ -180,14 +180,14 @@ def main():
         next_watering = fields.get("Next Watering Date", "N/A")
         plant_pic = fields.get("Plant Pic") or fields.get("Plant pic")
         
-        # Calculate if starving (<= 3 days left)
+        # Calculate if due today or overdue (missed watering)
         is_starving = False
         if next_watering != "N/A":
             try:
                 # Assuming YYYY-MM-DD format from Airtable
                 next_date = datetime.strptime(next_watering, "%Y-%m-%d").date()
                 today = datetime.now().date()
-                if (next_date - today).days <= 3:
+                if (next_date - today).days <= 0:
                     is_starving = True
             except ValueError:
                 pass
