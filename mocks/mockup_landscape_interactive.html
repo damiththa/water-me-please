@@ -1,9 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TRMNL Plant Watering — Interactive Adaptive Mockup</title>
 <style>
+  body { 
+    background-color: #1a1a1a; 
+    color: #fff;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    margin: 0; 
+    font-family: sans-serif; 
+  }
+
+  /* Control Panel at top */
+  .controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    background: #2a2a2a;
+    padding: 10px 20px;
+    border-radius: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  .btn {
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn:hover {
+    background: #555;
+  }
+
+  .btn.active {
+    background: #007bff;
+  }
+
+  .btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Device frame wrapper */
+  .device-frame {
+    border: 12px solid #333;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    background: #fff;
+  }
+
+  /* Core Layout copied from template.html */
   .layout { 
     width: 800px; height: 480px; 
     display: flex; flex-direction: column; 
     padding: 15px; box-sizing: border-box; 
     font-family: sans-serif; background: #fff;
+    color: #000;
   }
 
   /* Adaptive Grid */
@@ -272,63 +333,111 @@
     width: 100%;
   }
 </style>
+</head>
+<body>
 
-{% assign count = items.size %}
+<div class="controls">
+  <button class="btn" onclick="renderView(0)">0 Plants</button>
+  <button class="btn" onclick="renderView(1)">1 Plant</button>
+  <button class="btn" onclick="renderView(2)">2 Plants</button>
+  <button class="btn" onclick="renderView(3)">3 Plants</button>
+  <button class="btn active" onclick="renderView(4)">4 Plants</button>
+  <button class="btn" onclick="renderView(8)">8 Plants (Compact)</button>
+</div>
 
-<div class="layout">
-  {% if count == 0 %}
-    <div class="zero-plants">
-      <div class="zero-icon">🪴</div>
-      <div class="zero-title">All Hydrated!</div>
-      <div class="zero-desc">Your indoor jungle is happy. Enjoy the fresh air! 🌿✨</div>
-    </div>
-  {% elsif count <= 4 %}
-    <!-- Spacious Landscape Grid (Option B) -->
-    <div class="grid-landscape count-{{ count }}">
-      {% for item in items %}
-        <div class="item-landscape {% if item.o %}overdue-landscape{% endif %}">
-          <div class="thirsty-flag-landscape">💧</div>
-          <div class="img-container-landscape">
-            {% if item.i %}
-              <img class="plant-image image-dither" src="{{ item.i }}" />
-            {% else %}
-              <span class="emoji-landscape">🪴</span>
-            {% endif %}
-          </div>
-          <div class="info-landscape">
-            <div class="name-landscape">{{ item.n }}</div>
-            <div class="date-landscape">Due: {{ item.x }}</div>
-            {% if item.o %}
-              <div class="status-landscape">⚠️ Overdue</div>
-            {% else %}
-              <div class="status-landscape">💧 Thirsty</div>
-            {% endif %}
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <!-- Standard Compact Grid -->
-    <div class="grid {% if count > 8 %}grid-5{% else %}grid-4{% endif %}">
-      {% for item in items %}
-        <div class="item {% if item.o %}overdue{% endif %}">
-          <div class="thirsty-flag">💧</div>
-          <div class="img-container">
-            {% if item.i %}
-              <img class="plant-image image-dither" src="{{ item.i }}" />
-            {% else %}
-              <span class="emoji">🪴</span>
-            {% endif %}
-          </div>
-          <div class="name">{{ item.n }}</div>
-          <div class="date">Due: {{ item.x }}</div>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-
-  <div class="footer">
-    <span class="footer-title">🌿 PLANT WATERING DASHBOARD</span>
-    <span class="footer-count">{{ count }} PLANTS NEED ATTENTION</span>
+<div class="device-frame">
+  <div class="layout" id="layout-view">
+    <!-- Rendered dynamically -->
   </div>
 </div>
+
+<script>
+const plantsData = [
+  { n: "Dwarf Umbrella Tree", x: "5/30", o: false, i: "https://raw.githubusercontent.com/damiththa/water-me-please/main/assets/rec1toJDf1DIKKPCq.jpg" },
+  { n: "Green house Hydrange", x: "5/30", o: false, i: "https://raw.githubusercontent.com/damiththa/water-me-please/main/assets/recMXm2qDRc6I09eC.jpg" },
+  { n: "Hydrogen propagate", x: "5/30", o: false, i: "https://raw.githubusercontent.com/damiththa/water-me-please/main/assets/recRXnsQITkJcIpUE.jpg" },
+  { n: "Oak leaf ivy", x: "5/28", o: true, i: "https://raw.githubusercontent.com/damiththa/water-me-please/main/assets/recW9NAnKl2zLN4ai.jpg" },
+  { n: "African Violet", x: "5/29", o: true, i: "" },
+  { n: "Aloe Vera", x: "6/01", o: false, i: "" },
+  { n: "Monstera deliciosa", x: "5/30", o: false, i: "" },
+  { n: "Money Plant", x: "5/27", o: true, i: "" }
+];
+
+function renderView(count) {
+  // Update button active state
+  const buttons = document.querySelectorAll('.btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const container = document.getElementById('layout-view');
+  let html = '';
+
+  if (count === 0) {
+    html = `
+      <div class="zero-plants">
+        <div class="zero-icon">🪴</div>
+        <div class="zero-title">All Hydrated!</div>
+        <div class="zero-desc">Your indoor jungle is happy. Enjoy the fresh air! 🌿✨</div>
+      </div>
+    `;
+  } else if (count <= 4) {
+    html = `
+      <div class="grid-landscape count-${count}">
+    `;
+    for (let i = 0; i < count; i++) {
+      const item = plantsData[i];
+      html += `
+        <div class="item-landscape ${item.o ? 'overdue-landscape' : ''}">
+          <div class="thirsty-flag-landscape">💧</div>
+          <div class="img-container-landscape">
+            ${item.i 
+              ? `<img class="plant-image image-dither" src="${item.i}" />` 
+              : `<span class="emoji-landscape" style="font-size: ${count === 1 ? '55px' : count === 2 ? '50px' : '40px'}">🪴</span>`}
+          </div>
+          <div class="info-landscape">
+            <div class="name-landscape">${item.n}</div>
+            <div class="date-landscape">Due: ${item.x}</div>
+            <div class="status-landscape">${item.o ? '⚠️ Overdue' : '💧 Thirsty'}</div>
+          </div>
+        </div>
+      `;
+    }
+    html += `</div>`;
+  } else {
+    html = `
+      <div class="grid ${count > 8 ? 'grid-5' : 'grid-4'}">
+    `;
+    for (let i = 0; i < count; i++) {
+      const item = plantsData[i];
+      html += `
+        <div class="item ${item.o ? 'overdue' : ''}">
+          <div class="thirsty-flag">💧</div>
+          <div class="img-container">
+            ${item.i 
+              ? `<img class="plant-image image-dither" src="${item.i}" />` 
+              : `<span class="emoji">🪴</span>`}
+          </div>
+          <div class="name">${item.n}</div>
+          <div class="date">Due: ${item.x}</div>
+        </div>
+      `;
+    }
+    html += `</div>`;
+  }
+
+  // Footer is always present
+  html += `
+    <div class="footer">
+      <span class="footer-title">🌿 PLANT WATERING DASHBOARD</span>
+      <span class="footer-count">${count} PLANTS NEED ATTENTION</span>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
+// Initial render of 4 plants scenario
+renderView(4);
+</script>
+</body>
+</html>
