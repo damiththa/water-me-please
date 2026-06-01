@@ -228,6 +228,7 @@ def main():
                 "n": plant_name[:20],  # n = name (increased from 14 to 20)
                 "x": formatted_date,   # x = next watering date
                 "i": image_url,        # i = image_url
+                "_raw_date": next_watering # Temp sorting key
             }
             if is_overdue:
                 item_data["o"] = True  # o = overdue flag
@@ -238,8 +239,13 @@ def main():
     # because the script already filtered for them!
     # (Note: Logic moved into the transform loop or filter here)
     
-    # Sort items alphabetically by name
-    items.sort(key=lambda x: x["n"].lower())
+    # Sort items by oldest next_watering date first
+    items.sort(key=lambda x: x.get("_raw_date", "9999-12-31"))
+    
+    # Remove the temporary sort key and limit to 8 items since TRMNL shows max 8
+    for item in items:
+        item.pop("_raw_date", None)
+    items = items[:8]
     
     # 4. Final Payload (removed the 2KB image-stripping logic as URLs are now short)
     import json
