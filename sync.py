@@ -101,6 +101,9 @@ AIRTABLE_TABLE_NAME = os.getenv("AIRTABLE_TABLE_NAME")
 TRMNL_WEBHOOK_URL = os.getenv("TRMNL_WEBHOOK_URL")
 
 def main():
+    # 0. Check for CLI arguments or environment variables
+    is_flic_trigger = "--water-all" in sys.argv or os.getenv("TRIGGER_TYPE") == "flic" or os.getenv("EVENT_TYPE") == "flic_water_all"
+
     # 1. Validate configuration
     if not all([AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME]):
         print("Error: Missing required Airtable environment variables. Please check your .env file.")
@@ -123,7 +126,54 @@ def main():
         print(f"Failed to fetch from Airtable: {e}")
         return
 
-    # --- Maintenance: Handle "Watered ?" Checkboxes ---
+    # --- Flic Trigger: Mark all currently due plants as watered ---
+    if is_flic_trigger:
+        print("⚡ Flic Button Trigger Detected: Processing 'Water All Due Plants'...")
+        flic_updates = []
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        today_date = datetime.now().date()
+
+        for record in records:
+            fields = record.get("fields", {})
+            next_watering = fields.get("Next Watering Date", "N/A")
+            is_due = False
+            if next_watering != "N/A":
+                try:
+                    next_dt = datetime.strptime(next_watering, "%Y-%m-%d").date()
+                    if (next_dt - today_date).days <= 0:
+                        is_due = True
+                except ValueError:
+                    pass
+
+            if is_due:
+                plant_name = fields.get("Plant Name", "Unknown")
+                print(f"  -> Marking due plant as watered: {plant_name}")
+                freq_str = fields.get("Frequency")
+                days = parse_frequency(freq_str) or 7 # Default to 7 days if frequency unspecified
+
+                next_dt = datetime.now() + timedelta(days=days)
+                flic_updates.append({
+                    "id": record["id"],
+                    "fields": {
+                        "Last Watered": today_str,
+                        "Next Watering Date": next_dt.strftime("%Y-%m-%d"),
+                        "Watered ?": False
+                    }
+                })
+
+        if flic_updates:
+            print(f"Batch updating {len(flic_updates)} due plants in Airtable...")
+            try:
+                table.batch_update(flic_updates)
+                # Re-fetch records to reflect updates for TRMNL rendering
+                records = table.all()
+                print("✅ Successfully marked all due plants as watered in Airtable!")
+            except Exception as e:
+                print(f"Failed to update Airtable for Flic trigger: {e}")
+        else:
+            print("ℹ️  No plants currently due for watering. Duplicate press ignored safely.")
+
+    # --- Maintenance: Handle manual "Watered ?" Checkboxes ---
     updates = []
     for record in records:
         fields = record.get("fields", {})
@@ -234,11 +284,6 @@ def main():
                 item_data["o"] = True  # o = overdue flag
             items.append(item_data)
         
-    # Filter for only starving plants
-    # Since we want to save bytes, we don't need 'is_starving' in the payload 
-    # because the script already filtered for them!
-    # (Note: Logic moved into the transform loop or filter here)
-    
     # Sort items by oldest next_watering date first
     items.sort(key=lambda x: x.get("_raw_date", "9999-12-31"))
     
@@ -247,7 +292,7 @@ def main():
         item.pop("_raw_date", None)
     items = items[:8]
     
-    # 4. Final Payload (removed the 2KB image-stripping logic as URLs are now short)
+    # 4. Final Payload
     import json
     payload = {"merge_variables": {"items": items}}
     
@@ -271,3 +316,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
