@@ -102,7 +102,12 @@ TRMNL_WEBHOOK_URL = os.getenv("TRMNL_WEBHOOK_URL")
 
 def main():
     # 0. Check for CLI arguments or environment variables
-    is_flic_trigger = "--water-all" in sys.argv or os.getenv("TRIGGER_TYPE") == "flic" or os.getenv("EVENT_TYPE") == "flic_water_all"
+    is_flic_trigger = (
+        "--water-all" in sys.argv
+        or os.getenv("TRIGGER_TYPE") == "flic"
+        or os.getenv("EVENT_TYPE") == "flic_water_all"
+        or os.getenv("WATER_ALL") == "true"
+    )
 
     # 1. Validate configuration
     if not all([AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME]):
