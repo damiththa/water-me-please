@@ -7,6 +7,12 @@ on:
     # 1:48 PM EDT = 5:48 PM UTC (17:48)
     - cron: '48 17 * * *'
   workflow_dispatch: # Allow manual trigger from GitHub UI
+    inputs:
+      water_all:
+        description: 'Mark all due plants as watered (Flic simulation)'
+        required: false
+        type: boolean
+        default: false
   repository_dispatch: # Webhook trigger for Flic buttons / IFTTT Pro
     types: [flic_water_all]
 
@@ -40,7 +46,7 @@ jobs:
           AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
           AIRTABLE_TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
           TRMNL_WEBHOOK_URL: ${{ secrets.TRMNL_WEBHOOK_URL }}
-          EVENT_TYPE: ${{ github.event.action }}
+          EVENT_TYPE: ${{ github.event.inputs.water_all == 'true' && 'flic_water_all' || github.event.action }}
         run: python sync.py
 
 
