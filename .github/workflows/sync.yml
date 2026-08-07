@@ -14,14 +14,14 @@ on:
         type: boolean
         default: false
   repository_dispatch: # Webhook trigger for Flic buttons / IFTTT Pro
-    types: [flic_water_all]
+    types: [flic_water_all, flic_water_all_dev]
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     if: github.event_name != 'schedule' || github.ref == 'refs/heads/main'
-    # Select environment based on branch (main -> Production, others -> Development)
-    environment: ${{ github.ref_name == 'main' && 'Production' || 'Development' }}
+    # Select environment: route 'flic_water_all_dev' webhook to Development, otherwise fallback to branch rules
+    environment: ${{ (github.event_name == 'repository_dispatch' && github.event.action == 'flic_water_all_dev') && 'Development' || (github.ref_name == 'main' && 'Production' || 'Development') }}
 
     permissions:
       contents: write # Needed to push assets back to the repo

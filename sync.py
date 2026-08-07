@@ -133,7 +133,7 @@ def main():
     is_flic_trigger = (
         "--water-all" in sys.argv
         or os.getenv("TRIGGER_TYPE") == "flic"
-        or os.getenv("EVENT_TYPE") == "flic_water_all"
+        or os.getenv("EVENT_TYPE") in ["flic_water_all", "flic_water_all_dev"]
         or os.getenv("WATER_ALL") == "true"
     )
 
