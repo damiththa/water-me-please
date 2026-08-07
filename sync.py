@@ -114,13 +114,21 @@ def is_plant_plugin_active():
         response = requests.get(url, headers=headers, timeout=10)
         if response.status_code == 200:
             data = response.json()
-            image_name = data.get("image_name", "")
-            if TRMNL_PLUGIN_NAME.lower() in image_name.lower():
+            # TRMNL API returns `filename`, not `image_name`
+            image_name = data.get("filename") or data.get("image_name") or ""
+            
+            # Extract Webhook ID from TRMNL_WEBHOOK_URL to match dynamically
+            # Example URL: https://trmnl.com/api/webhooks/a09501...
+            webhook_id = ""
+            if TRMNL_WEBHOOK_URL and "/webhooks/" in TRMNL_WEBHOOK_URL:
+                webhook_id = TRMNL_WEBHOOK_URL.split("/webhooks/")[-1].split("-")[0]
+            
+            # Match either the hardcoded plugin name OR the dynamic webhook ID
+            if (TRMNL_PLUGIN_NAME.lower() in image_name.lower()) or (webhook_id and webhook_id.lower() in image_name.lower()):
                 print(f"  ✅ Screen Context Verified: Active screen '{image_name}' matches plant plugin.")
                 return True
             else:
                 print(f"  ℹ️  Screen Context Check: Active screen '{image_name}' is NOT the plant plugin. Skipping button action.")
-                print(f"  🔍 DEBUG: TRMNL API raw response data: {data}")
                 return False
         else:
             print(f"  ⚠️ Could not query TRMNL device state (HTTP {response.status_code}). Proceeding safely.")
