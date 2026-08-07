@@ -101,6 +101,7 @@ AIRTABLE_TABLE_NAME = os.getenv("AIRTABLE_TABLE_NAME")
 TRMNL_WEBHOOK_URL = os.getenv("TRMNL_WEBHOOK_URL")
 TRMNL_DEVICE_API_KEY = os.getenv("TRMNL_DEVICE_API_KEY")
 TRMNL_PLUGIN_NAME = os.getenv("TRMNL_PLUGIN_NAME", "water") # Pattern to match in current image_name or plugin identifier
+TRMNL_PLUGIN_ID = os.getenv("TRMNL_PLUGIN_ID", "").strip()
 
 def is_plant_plugin_active():
     """Verify if the Plant Watering plugin is currently displayed on TRMNL screen."""
@@ -117,23 +118,20 @@ def is_plant_plugin_active():
             # TRMNL API returns `filename`, not `image_name`
             image_name = data.get("filename") or data.get("image_name") or ""
             
-            # TRMNL API uses a 6-character short hash of the Webhook UUID in its filenames!
-            webhook_id = ""
-            if TRMNL_WEBHOOK_URL:
-                # Handle both /webhook/ and /webhooks/
-                url_parts = TRMNL_WEBHOOK_URL.split("/")
-                # The UUID is usually the last part of the URL (e.g. /api/webhooks/a09501...)
-                full_id = url_parts[-1].replace("-", "")
-                if len(full_id) >= 6:
-                    webhook_id = full_id[:6]
-                print(f"  🔍 DEBUG: Extracted webhook_id: '{webhook_id}' from URL ending in '.../{url_parts[-1][:8]}...'")
+            # 1. Strict match if TRMNL_PLUGIN_ID secret is explicitly provided (for multi-plugin devices)
+            if TRMNL_PLUGIN_ID and TRMNL_PLUGIN_ID.lower() in image_name.lower():
+                print(f"  ✅ Screen Context Verified: Active screen '{image_name}' matches plugin ID '{TRMNL_PLUGIN_ID}'.")
+                return True
+            elif TRMNL_PLUGIN_ID:
+                print(f"  ℹ️  Screen Context Check: Active screen '{image_name}' does NOT match required plugin ID '{TRMNL_PLUGIN_ID}'. Skipping button action.")
+                return False
             
-            # Match either the hardcoded plugin name OR the dynamic webhook ID
-            if (TRMNL_PLUGIN_NAME.lower() in image_name.lower()) or (webhook_id and webhook_id.lower() in image_name.lower()):
-                print(f"  ✅ Screen Context Verified: Active screen '{image_name}' matches plant plugin (ID: {webhook_id}).")
+            # 2. Fallback match for single-plugin devices (e.g. TRMNL Black / DEV): match any 'plugin-' or 'custom-'
+            if image_name.lower().startswith("plugin-") or image_name.lower().startswith("custom-") or "water" in image_name.lower():
+                print(f"  ✅ Screen Context Verified: Active screen '{image_name}' is a valid Custom Plugin screen.")
                 return True
             else:
-                print(f"  ℹ️  Screen Context Check: Active screen '{image_name}' is NOT the plant plugin. Skipping button action.")
+                print(f"  ℹ️  Screen Context Check: Active screen '{image_name}' is NOT a custom/plant plugin. Skipping button action.")
                 return False
         else:
             print(f"  ⚠️ Could not query TRMNL device state (HTTP {response.status_code}). Proceeding safely.")
