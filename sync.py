@@ -140,21 +140,6 @@ def is_plant_plugin_active():
         print(f"  ⚠️ Error checking TRMNL device screen state: {e}. Proceeding safely.")
         return True
 
-def trigger_hardware_refresh():
-    """Trigger an immediate physical hardware refresh on TRMNL device."""
-    if not TRMNL_DEVICE_API_KEY:
-        return
-    try:
-        url = "https://trmnl.com/api/display/refresh"
-        headers = {"access-token": TRMNL_DEVICE_API_KEY}
-        response = requests.post(url, headers=headers, timeout=5)
-        if response.status_code == 200:
-            print("  ⚡ Hardware Refresh Signal Sent to TRMNL Device!")
-        else:
-            print(f"  ⚠️ TRMNL Hardware Refresh endpoint returned HTTP {response.status_code}")
-    except Exception as e:
-        print(f"  ⚠️ Could not trigger TRMNL hardware refresh: {e}")
-
 def main():
     # 0. Check for CLI arguments or environment variables
     is_flic_trigger = (
@@ -204,7 +189,6 @@ def main():
                         headers={"Content-Type": "application/json"},
                         timeout=5
                     )
-                    trigger_hardware_refresh()
                 except Exception as e:
                     print(f"⚠️ Failed to send acknowledgment: {e}")
                     
@@ -390,7 +374,6 @@ def main():
         )
         response.raise_for_status()
         print("Successfully updated TRMNL plugin!")
-        trigger_hardware_refresh()
     except requests.exceptions.RequestException as e:
         print(f"Failed to update TRMNL plugin. Error: {e}")
 
