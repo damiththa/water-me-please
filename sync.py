@@ -120,6 +120,7 @@ def is_plant_plugin_active():
                 return True
             else:
                 print(f"  ℹ️  Screen Context Check: Active screen '{image_name}' is NOT the plant plugin. Skipping button action.")
+                print(f"  🔍 DEBUG: TRMNL API raw response data: {data}")
                 return False
         else:
             print(f"  ⚠️ Could not query TRMNL device state (HTTP {response.status_code}). Proceeding safely.")
