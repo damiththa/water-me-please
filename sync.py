@@ -119,9 +119,14 @@ def is_plant_plugin_active():
             
             # TRMNL API uses a 6-character short hash of the Webhook UUID in its filenames!
             webhook_id = ""
-            if TRMNL_WEBHOOK_URL and "/webhooks/" in TRMNL_WEBHOOK_URL:
-                full_id = TRMNL_WEBHOOK_URL.split("/webhooks/")[-1].replace("-", "")
-                webhook_id = full_id[:6]
+            if TRMNL_WEBHOOK_URL:
+                # Handle both /webhook/ and /webhooks/
+                url_parts = TRMNL_WEBHOOK_URL.split("/")
+                # The UUID is usually the last part of the URL (e.g. /api/webhooks/a09501...)
+                full_id = url_parts[-1].replace("-", "")
+                if len(full_id) >= 6:
+                    webhook_id = full_id[:6]
+                print(f"  🔍 DEBUG: Extracted webhook_id: '{webhook_id}' from URL ending in '.../{url_parts[-1][:8]}...'")
             
             # Match either the hardcoded plugin name OR the dynamic webhook ID
             if (TRMNL_PLUGIN_NAME.lower() in image_name.lower()) or (webhook_id and webhook_id.lower() in image_name.lower()):
