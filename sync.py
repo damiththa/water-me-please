@@ -99,6 +99,34 @@ AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
 AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
 AIRTABLE_TABLE_NAME = os.getenv("AIRTABLE_TABLE_NAME")
 TRMNL_WEBHOOK_URL = os.getenv("TRMNL_WEBHOOK_URL")
+TRMNL_DEVICE_API_KEY = os.getenv("TRMNL_DEVICE_API_KEY")
+TRMNL_PLUGIN_NAME = os.getenv("TRMNL_PLUGIN_NAME", "water") # Pattern to match in current image_name or plugin identifier
+
+def is_plant_plugin_active():
+    """Verify if the Plant Watering plugin is currently displayed on TRMNL screen."""
+    if not TRMNL_DEVICE_API_KEY:
+        # If device API key is not configured, skip screen check safely
+        return True
+        
+    try:
+        url = "https://trmnl.com/api/display/current"
+        headers = {"access-token": TRMNL_DEVICE_API_KEY}
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            image_name = data.get("image_name", "")
+            if TRMNL_PLUGIN_NAME.lower() in image_name.lower():
+                print(f"  ✅ Screen Context Verified: Active screen '{image_name}' matches plant plugin.")
+                return True
+            else:
+                print(f"  ℹ️  Screen Context Check: Active screen '{image_name}' is NOT the plant plugin. Skipping button action.")
+                return False
+        else:
+            print(f"  ⚠️ Could not query TRMNL device state (HTTP {response.status_code}). Proceeding safely.")
+            return True
+    except Exception as e:
+        print(f"  ⚠️ Error checking TRMNL device screen state: {e}. Proceeding safely.")
+        return True
 
 def main():
     # 0. Check for CLI arguments or environment variables
@@ -133,50 +161,54 @@ def main():
 
     # --- Flic Trigger: Mark all currently due plants as watered ---
     if is_flic_trigger:
-        print("⚡ Flic Button Trigger Detected: Processing 'Water All Due Plants'...")
-        flic_updates = []
-        today_str = datetime.now().strftime("%Y-%m-%d")
-        today_date = datetime.now().date()
-
-        for record in records:
-            fields = record.get("fields", {})
-            next_watering = fields.get("Next Watering Date", "N/A")
-            is_due = False
-            if next_watering != "N/A":
-                try:
-                    next_dt = datetime.strptime(next_watering, "%Y-%m-%d").date()
-                    if (next_dt - today_date).days <= 0:
-                        is_due = True
-                except ValueError:
-                    pass
-
-            if is_due:
-                plant_name = fields.get("Plant Name", "Unknown")
-                print(f"  -> Marking due plant as watered: {plant_name}")
-                freq_str = fields.get("Frequency")
-                days = parse_frequency(freq_str) or 7 # Default to 7 days if frequency unspecified
-
-                next_dt = datetime.now() + timedelta(days=days)
-                flic_updates.append({
-                    "id": record["id"],
-                    "fields": {
-                        "Last Watered": today_str,
-                        "Next Watering Date": next_dt.strftime("%Y-%m-%d"),
-                        "Watered ?": False
-                    }
-                })
-
-        if flic_updates:
-            print(f"Batch updating {len(flic_updates)} due plants in Airtable...")
-            try:
-                table.batch_update(flic_updates)
-                # Re-fetch records to reflect updates for TRMNL rendering
-                records = table.all()
-                print("✅ Successfully marked all due plants as watered in Airtable!")
-            except Exception as e:
-                print(f"Failed to update Airtable for Flic trigger: {e}")
+        print("⚡ Flic Button Trigger Detected: Checking screen context...")
+        if not is_plant_plugin_active():
+            print("ℹ️ Button press ignored because Plant Dashboard is not currently on the TRMNL screen.")
         else:
-            print("ℹ️  No plants currently due for watering. Duplicate press ignored safely.")
+            print("Processing 'Water All Due Plants'...")
+            flic_updates = []
+            today_str = datetime.now().strftime("%Y-%m-%d")
+            today_date = datetime.now().date()
+
+            for record in records:
+                fields = record.get("fields", {})
+                next_watering = fields.get("Next Watering Date", "N/A")
+                is_due = False
+                if next_watering != "N/A":
+                    try:
+                        next_dt = datetime.strptime(next_watering, "%Y-%m-%d").date()
+                        if (next_dt - today_date).days <= 0:
+                            is_due = True
+                    except ValueError:
+                        pass
+
+                if is_due:
+                    plant_name = fields.get("Plant Name", "Unknown")
+                    print(f"  -> Marking due plant as watered: {plant_name}")
+                    freq_str = fields.get("Frequency")
+                    days = parse_frequency(freq_str) or 7 # Default to 7 days if frequency unspecified
+
+                    next_dt = datetime.now() + timedelta(days=days)
+                    flic_updates.append({
+                        "id": record["id"],
+                        "fields": {
+                            "Last Watered": today_str,
+                            "Next Watering Date": next_dt.strftime("%Y-%m-%d"),
+                            "Watered ?": False
+                        }
+                    })
+
+            if flic_updates:
+                print(f"Batch updating {len(flic_updates)} due plants in Airtable...")
+                try:
+                    table.batch_update(flic_updates)
+                    # Re-fetch records to reflect updates for TRMNL rendering
+                    records = table.all()
+                    print("✅ Successfully marked all due plants as watered in Airtable!")
+                except Exception as e:
+                    print(f"Failed to update Airtable for Flic trigger: {e}")
+            else:
+                print("ℹ️  No plants currently due for watering. Duplicate press ignored safely.")
 
     # --- Maintenance: Handle manual "Watered ?" Checkboxes ---
     updates = []

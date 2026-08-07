@@ -46,6 +46,7 @@ jobs:
           AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
           AIRTABLE_TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
           TRMNL_WEBHOOK_URL: ${{ secrets.TRMNL_WEBHOOK_URL }}
+          TRMNL_DEVICE_API_KEY: ${{ secrets.TRMNL_DEVICE_API_KEY }}
           EVENT_TYPE: ${{ github.event.action }}
           WATER_ALL: ${{ github.event.inputs.water_all }}
         run: python sync.py
