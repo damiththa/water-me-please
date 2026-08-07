@@ -175,6 +175,20 @@ def main():
             print("ℹ️ Button press ignored because Plant Dashboard is not currently on the TRMNL screen.")
         else:
             print("Processing 'Water All Due Plants'...")
+            
+            # --- Push Instant Acknowledgement to TRMNL ---
+            if TRMNL_WEBHOOK_URL and "your_uuid_here" not in TRMNL_WEBHOOK_URL:
+                print("Sending instant 'Watering in progress...' notification to TRMNL...")
+                try:
+                    requests.post(
+                        TRMNL_WEBHOOK_URL,
+                        json={"merge_variables": {"items": [{"n": "💧 Watering in progress...", "x": "Now", "i": None}]}},
+                        headers={"Content-Type": "application/json"},
+                        timeout=5
+                    )
+                except Exception as e:
+                    print(f"⚠️ Failed to send acknowledgment: {e}")
+                    
             flic_updates = []
             today_str = datetime.now().strftime("%Y-%m-%d")
             today_date = datetime.now().date()
