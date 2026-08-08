@@ -102,6 +102,22 @@ TRMNL_WEBHOOK_URL = os.getenv("TRMNL_WEBHOOK_URL")
 TRMNL_DEVICE_API_KEY = os.getenv("TRMNL_DEVICE_API_KEY")
 TRMNL_PLUGIN_NAME = os.getenv("TRMNL_PLUGIN_NAME", "water") # Pattern to match in current image_name or plugin identifier
 TRMNL_PLUGIN_ID = os.getenv("TRMNL_PLUGIN_ID", "").strip()
+VOICEMONKEY_WEBHOOK_URL = os.getenv("VOICEMONKEY_WEBHOOK_URL")
+
+def send_voicemonkey_announcement(speech_text):
+    """Send a dynamic TTS announcement to VoiceMonkey."""
+    if not VOICEMONKEY_WEBHOOK_URL:
+        print("  ℹ️  VoiceMonkey webhook not configured. Skipping announcement.")
+        return
+    try:
+        payload = {"speech": speech_text}
+        response = requests.post(VOICEMONKEY_WEBHOOK_URL, json=payload, timeout=5)
+        if response.status_code in [200, 201, 204]:
+            print(f"  ✅ VoiceMonkey announcement sent: '{speech_text}'")
+        else:
+            print(f"  ⚠️ VoiceMonkey announcement failed: HTTP {response.status_code} - {response.text}")
+    except Exception as e:
+        print(f"  ⚠️ Error sending VoiceMonkey announcement: {e}")
 
 def is_plant_plugin_active():
     """Verify if the Plant Watering plugin is currently displayed on TRMNL screen."""
@@ -217,10 +233,12 @@ def main():
                     # Re-fetch records to reflect updates for TRMNL rendering
                     records = table.all()
                     print("✅ Successfully marked all due plants as watered in Airtable!")
+                    send_voicemonkey_announcement(f"We are working on marking the {len(flic_updates)} plants as watered. Your screen will be updated soon.")
                 except Exception as e:
                     print(f"Failed to update Airtable for Flic trigger: {e}")
             else:
                 print("ℹ️  No plants currently due for watering. Duplicate press ignored safely.")
+                send_voicemonkey_announcement("There are no plants that need watering right now.")
 
     # --- Maintenance: Handle manual "Watered ?" Checkboxes ---
     updates = []
