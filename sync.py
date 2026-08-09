@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import requests
 import re
 from pyairtable import Api
@@ -100,7 +101,7 @@ AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
 AIRTABLE_TABLE_NAME = os.getenv("AIRTABLE_TABLE_NAME")
 TRMNL_WEBHOOK_URL = os.getenv("TRMNL_WEBHOOK_URL")
 TRMNL_DEVICE_API_KEY = os.getenv("TRMNL_DEVICE_API_KEY")
-TRMNL_PLUGIN_NAME = os.getenv("TRMNL_PLUGIN_NAME", "water") # Pattern to match in current image_name or plugin identifier
+
 TRMNL_PLUGIN_ID = os.getenv("TRMNL_PLUGIN_ID", "").strip()
 VOICEMONKEY_WEBHOOK_URL = os.getenv("VOICEMONKEY_WEBHOOK_URL")
 
@@ -233,7 +234,8 @@ def main():
                     # Re-fetch records to reflect updates for TRMNL rendering
                     records = table.all()
                     print("✅ Successfully marked all due plants as watered in Airtable!")
-                    send_voicemonkey_announcement(f"We are working on marking the {len(flic_updates)} plants as watered. Your screen will be updated soon.")
+                    plant_word = "plant" if len(flic_updates) == 1 else "plants"
+                    send_voicemonkey_announcement(f"Done! {len(flic_updates)} {plant_word} marked as watered. Your screen will be updated soon.")
                 except Exception as e:
                     print(f"Failed to update Airtable for Flic trigger: {e}")
             else:
@@ -293,7 +295,6 @@ def main():
         
         # Extract plant watering data
         plant_name = fields.get("Plant Name", "Unknown")
-        last_watered = fields.get("Last Watered", "N/A")
         next_watering = fields.get("Next Watering Date", "N/A")
         plant_pic = fields.get("Plant Pic") or fields.get("Plant pic")
         
@@ -360,7 +361,6 @@ def main():
     items = items[:8]
     
     # 4. Final Payload
-    import json
     payload = {"merge_variables": {"items": items}}
     
     print(f"\nPayload Size: {len(json.dumps(payload))} bytes (Limit: 2048)")
