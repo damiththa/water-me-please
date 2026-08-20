@@ -203,6 +203,7 @@ def main():
         print("⚡ Flic Button Trigger Detected: Checking screen context...")
         if not is_plant_plugin_active():
             print("ℹ️ Button press ignored because Plant Dashboard is not currently on the TRMNL screen.")
+            send_voicemonkey_announcement("Button press ignored because the plant dashboard is not on your screen.")
         else:
             print("Processing 'Water All Due Plants'...")
             flic_updates = []
