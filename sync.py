@@ -38,8 +38,8 @@ def get_wrong_screen_announcement():
     """Generate a rotating announcement when wrong screen is active."""
     messages = [
         "Oops! Looks like the plant dashboard isn't on your screen. Switch to it and try again!",
-        "Hold on! I can only water plants when the plant dashboard is on your TRMNL display.",
-        "Hey there! Please switch your TRMNL screen to the plant dashboard first.",
+        "Hold on! I can only water plants when the plant dashboard is on your display.",
+        "Hey there! Please switch your screen to the plant dashboard first.",
     ]
     return random.choice(messages)
 
