@@ -103,16 +103,26 @@ TRMNL_WEBHOOK_URL = os.getenv("TRMNL_WEBHOOK_URL")
 TRMNL_DEVICE_API_KEY = os.getenv("TRMNL_DEVICE_API_KEY")
 
 TRMNL_PLUGIN_ID = os.getenv("TRMNL_PLUGIN_ID", "").strip()
-VOICEMONKEY_WEBHOOK_URL = os.getenv("VOICEMONKEY_WEBHOOK_URL")
+VOICEMONKEY_TOKEN = os.getenv("VOICEMONKEY_TOKEN")
+VOICEMONKEY_DEVICE = os.getenv("VOICEMONKEY_DEVICE")
 
 def send_voicemonkey_announcement(speech_text):
     """Send a dynamic TTS announcement to VoiceMonkey."""
-    if not VOICEMONKEY_WEBHOOK_URL:
-        print("  ℹ️  VoiceMonkey webhook not configured. Skipping announcement.")
+    if not VOICEMONKEY_TOKEN or not VOICEMONKEY_DEVICE:
+        print("  ℹ️  VoiceMonkey token or device not configured. Skipping announcement.")
         return
     try:
-        payload = {"speech": speech_text}
-        response = requests.post(VOICEMONKEY_WEBHOOK_URL, json=payload, timeout=5)
+        url = "https://api-v3.voicemonkey.io/announce"
+        payload = {
+            "token": VOICEMONKEY_TOKEN,
+            "device": VOICEMONKEY_DEVICE,
+            "speech": speech_text
+        }
+        headers = {
+            "Authorization": f"Bearer {VOICEMONKEY_TOKEN}",
+            "Content-Type": "application/json"
+        }
+        response = requests.post(url, json=payload, headers=headers, timeout=5)
         if response.status_code in [200, 201, 204]:
             print(f"  ✅ VoiceMonkey announcement sent: '{speech_text}'")
         else:
