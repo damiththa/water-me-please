@@ -3,11 +3,45 @@ import sys
 import json
 import requests
 import re
+import random
 from pyairtable import Api
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import urllib.parse
 import time
+
+def get_watered_announcement(count):
+    """Generate a rotating playful announcement for watered plants."""
+    plant_word = "plant" if count == 1 else "plants"
+    messages = [
+        f"All done! {count} thirsty {plant_word} got their drink. Your indoor jungle thanks you!",
+        f"Splash! {count} {plant_word} watered and happy. Green thumbs up!",
+        f"Hydration complete! {count} {plant_word} marked as watered. Looking fresh!",
+        f"Boom! {count} {plant_word} are fully hydrated and living their best life.",
+        f"All set! Gave {count} {plant_word} some love. Your screen will be updated shortly.",
+        f"Mission accomplished! {count} {plant_word} refreshed and thriving.",
+    ]
+    return random.choice(messages)
+
+def get_no_plants_announcement():
+    """Generate a rotating playful announcement when no plants need watering."""
+    messages = [
+        "All clear! Your plants are already happy and hydrated. No thirsty leaves in sight!",
+        "Nothing to water right now! Your leafy friends are all good to go.",
+        "All good! All your plants are quenched. Sit back and enjoy the fresh air!",
+        "False alarm! No plants need watering today. Great job keeping up with them!",
+        "Zero thirsty plants found! Your indoor jungle is fully satisfied.",
+    ]
+    return random.choice(messages)
+
+def get_wrong_screen_announcement():
+    """Generate a rotating announcement when wrong screen is active."""
+    messages = [
+        "Oops! Looks like the plant dashboard isn't on your screen. Switch to it and try again!",
+        "Hold on! I can only water plants when the plant dashboard is on your TRMNL display.",
+        "Hey there! Please switch your TRMNL screen to the plant dashboard first.",
+    ]
+    return random.choice(messages)
 
 def download_image(url, save_path):
     """Download an image from a URL and save it locally."""
@@ -203,7 +237,7 @@ def main():
         print("⚡ Flic Button Trigger Detected: Checking screen context...")
         if not is_plant_plugin_active():
             print("ℹ️ Button press ignored because Plant Dashboard is not currently on the TRMNL screen.")
-            send_voicemonkey_announcement("Button press ignored because the plant dashboard is not on your screen.")
+            send_voicemonkey_announcement(get_wrong_screen_announcement())
         else:
             print("Processing 'Water All Due Plants'...")
             flic_updates = []
@@ -245,13 +279,12 @@ def main():
                     # Re-fetch records to reflect updates for TRMNL rendering
                     records = table.all()
                     print("✅ Successfully marked all due plants as watered in Airtable!")
-                    plant_word = "plant" if len(flic_updates) == 1 else "plants"
-                    send_voicemonkey_announcement(f"All done! {len(flic_updates)} {plant_word} successfully watered and updated.")
+                    send_voicemonkey_announcement(get_watered_announcement(len(flic_updates)))
                 except Exception as e:
                     print(f"Failed to update Airtable for Flic trigger: {e}")
             else:
                 print("ℹ️  No plants currently due for watering. Duplicate press ignored safely.")
-                send_voicemonkey_announcement("All clear! No plants need watering right now.")
+                send_voicemonkey_announcement(get_no_plants_announcement())
 
     # --- Maintenance: Handle manual "Watered ?" Checkboxes ---
     updates = []
