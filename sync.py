@@ -235,12 +235,12 @@ def main():
                     records = table.all()
                     print("✅ Successfully marked all due plants as watered in Airtable!")
                     plant_word = "plant" if len(flic_updates) == 1 else "plants"
-                    send_voicemonkey_announcement(f"Done! {len(flic_updates)} {plant_word} marked as watered. Your screen will be updated soon.")
+                    send_voicemonkey_announcement(f"All done! {len(flic_updates)} {plant_word} successfully watered and updated.")
                 except Exception as e:
                     print(f"Failed to update Airtable for Flic trigger: {e}")
             else:
                 print("ℹ️  No plants currently due for watering. Duplicate press ignored safely.")
-                send_voicemonkey_announcement("There are no plants that need watering right now.")
+                send_voicemonkey_announcement("All clear! No plants need watering right now.")
 
     # --- Maintenance: Handle manual "Watered ?" Checkboxes ---
     updates = []
