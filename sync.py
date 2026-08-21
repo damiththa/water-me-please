@@ -165,7 +165,11 @@ def send_voicemonkey_announcement(speech_text):
         print(f"  ⚠️ Error sending VoiceMonkey announcement: {e}")
 
 def is_plant_plugin_active():
-    """Verify if the Plant Watering plugin is currently displayed on TRMNL screen."""
+    """Verify if the Plant Watering plugin is currently displayed on TRMNL screen.
+    
+    Checks multiple fields from the TRMNL API response to be resilient against
+    screen rotation timing (the screen may rotate during GitHub Actions bootup).
+    """
     if not TRMNL_DEVICE_API_KEY:
         # If device API key is not configured, skip screen check safely
         return True
@@ -176,19 +180,29 @@ def is_plant_plugin_active():
         response = requests.get(url, headers=headers, timeout=10)
         if response.status_code == 200:
             data = response.json()
-            # TRMNL API returns `filename`, not `image_name`
+            
+            # Log the full API response for debugging
+            print(f"  📡 TRMNL API Response: {json.dumps(data, indent=2)}")
+            
+            # Collect all identifiable fields to check against
             image_name = data.get("filename") or data.get("image_name") or ""
+            image_url = data.get("image_url") or ""
+            plugin_uuid = data.get("plugin_uuid") or ""
+            
+            # Combine all identifiers into one searchable string
+            all_identifiers = f"{image_name} {image_url} {plugin_uuid}".lower()
             
             # 1. Strict match if TRMNL_PLUGIN_ID secret is explicitly provided (for multi-plugin devices)
-            if TRMNL_PLUGIN_ID and TRMNL_PLUGIN_ID.lower() in image_name.lower():
-                print(f"  ✅ Screen Context Verified: Active screen '{image_name}' matches plugin ID '{TRMNL_PLUGIN_ID}'.")
-                return True
-            elif TRMNL_PLUGIN_ID:
-                print(f"  ℹ️  Screen Context Check: Active screen '{image_name}' does NOT match required plugin ID '{TRMNL_PLUGIN_ID}'. Skipping button action.")
-                return False
+            if TRMNL_PLUGIN_ID:
+                if TRMNL_PLUGIN_ID.lower() in all_identifiers:
+                    print(f"  ✅ Screen Context Verified: Plugin ID '{TRMNL_PLUGIN_ID}' found in active display.")
+                    return True
+                else:
+                    print(f"  ℹ️  Screen Context Check: Plugin ID '{TRMNL_PLUGIN_ID}' NOT found in active display. Skipping button action.")
+                    return False
             
             # 2. Fallback match for single-plugin devices (e.g. TRMNL Black / DEV): match any 'plugin-' or 'custom-'
-            if image_name.lower().startswith("plugin-") or image_name.lower().startswith("custom-") or "water" in image_name.lower():
+            if "plugin-" in all_identifiers or "custom-" in all_identifiers or "water" in all_identifiers:
                 print(f"  ✅ Screen Context Verified: Active screen '{image_name}' is a valid Custom Plugin screen.")
                 return True
             else:
