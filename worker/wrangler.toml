@@ -4,6 +4,11 @@ compatibility_date = "2024-09-01"
 
 [vars]
 GITHUB_REPO = "damiththa/water-me-please"
+
+[env.production]
+name = "water-me-please"
+[env.production.vars]
+GITHUB_REPO = "damiththa/water-me-please"
 EVENT_TYPE = "flic_water_all"
 
 [env.dev]

@@ -25,7 +25,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'worker'
-          environment: ${{ github.ref_name == 'main' && '' || 'dev' }}
+          environment: ${{ github.ref_name == 'main' && 'production' || 'dev' }}
           secrets: |
             GITHUB_PAT
             TRMNL_DEVICE_API_KEY
