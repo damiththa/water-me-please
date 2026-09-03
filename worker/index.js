@@ -88,7 +88,7 @@ export default {
           body: JSON.stringify({
             token: env.VOICEMONKEY_TOKEN,
             device: env.VOICEMONKEY_DEVICE,
-            speech: "Working on watering your plants now!",
+            speech: "Working on watering your plants now, this might take a bit of time",
           }),
         });
       }
