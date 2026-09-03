@@ -9,10 +9,16 @@ export default {
       const url = new URL(request.url);
       const isDev = url.searchParams.get("env") === "dev";
 
-      // If specific _DEV / _PROD secrets exist, use them; otherwise use the environment-injected secret
-      const trmnlKey = env.TRMNL_DEVICE_API_KEY || (isDev ? env.TRMNL_DEVICE_API_KEY_DEV : env.TRMNL_DEVICE_API_KEY_PROD);
-      const pluginId = env.TRMNL_PLUGIN_ID || (isDev ? (env.TRMNL_PLUGIN_ID_DEV || "65837e") : env.TRMNL_PLUGIN_ID_PROD);
-      const eventType = isDev ? "flic_water_all_dev" : (url.searchParams.get("env") === "prod" ? "flic_water_all" : (env.EVENT_TYPE || "flic_water_all_dev"));
+      // Select keys strictly based on isDev
+      const trmnlKey = isDev 
+        ? (env.TRMNL_DEVICE_API_KEY_DEV || env.TRMNL_DEVICE_API_KEY)
+        : (env.TRMNL_DEVICE_API_KEY_PROD || env.TRMNL_DEVICE_API_KEY);
+
+      const pluginId = isDev 
+        ? (env.TRMNL_PLUGIN_ID_DEV || "65837e")
+        : (env.TRMNL_PLUGIN_ID_PROD || env.TRMNL_PLUGIN_ID);
+
+      const eventType = isDev ? "flic_water_all_dev" : "flic_water_all";
 
       console.log(`Processing request for environment: ${isDev ? "DEVELOPMENT" : "PRODUCTION"}`);
 

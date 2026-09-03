@@ -27,13 +27,17 @@ jobs:
           workingDirectory: 'worker'
           secrets: |
             GITHUB_PAT
-            TRMNL_DEVICE_API_KEY
-            TRMNL_PLUGIN_ID
+            TRMNL_DEVICE_API_KEY_DEV
+            TRMNL_DEVICE_API_KEY_PROD
+            TRMNL_PLUGIN_ID_DEV
+            TRMNL_PLUGIN_ID_PROD
             VOICEMONKEY_TOKEN
             VOICEMONKEY_DEVICE
         env:
           GITHUB_PAT: ${{ secrets.PAT_GITHUB || secrets.GITHUB_TOKEN }}
-          TRMNL_DEVICE_API_KEY: ${{ secrets.TRMNL_DEVICE_API_KEY }}
-          TRMNL_PLUGIN_ID: ${{ secrets.TRMNL_PLUGIN_ID }}
+          TRMNL_DEVICE_API_KEY_DEV: ${{ secrets.TRMNL_DEVICE_API_KEY_DEV }}
+          TRMNL_DEVICE_API_KEY_PROD: ${{ secrets.TRMNL_DEVICE_API_KEY_PROD }}
+          TRMNL_PLUGIN_ID_DEV: ${{ secrets.TRMNL_PLUGIN_ID_DEV || '65837e' }}
+          TRMNL_PLUGIN_ID_PROD: ${{ secrets.TRMNL_PLUGIN_ID_PROD }}
           VOICEMONKEY_TOKEN: ${{ secrets.VOICEMONKEY_TOKEN }}
           VOICEMONKEY_DEVICE: ${{ secrets.VOICEMONKEY_DEVICE }}
