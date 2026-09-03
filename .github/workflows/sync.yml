@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          ref: ${{ (github.event_name == 'repository_dispatch' && github.event.action == 'flic_water_all_dev') && 'dev' || github.ref }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
