@@ -140,8 +140,8 @@ TRMNL_PLUGIN_ID = os.getenv("TRMNL_PLUGIN_ID", "").strip()
 VOICEMONKEY_TOKEN = os.getenv("VOICEMONKEY_TOKEN")
 VOICEMONKEY_DEVICE = os.getenv("VOICEMONKEY_DEVICE")
 
-def send_voicemonkey_announcement(speech_text, chime=None):
-    """Send a dynamic TTS announcement to VoiceMonkey with optional audio chime."""
+def send_voicemonkey_announcement(speech_text):
+    """Send a dynamic TTS announcement to VoiceMonkey (supports SSML tags)."""
     if not VOICEMONKEY_TOKEN or not VOICEMONKEY_DEVICE:
         print("  ℹ️  VoiceMonkey token or device not configured. Skipping announcement.")
         return
@@ -152,8 +152,6 @@ def send_voicemonkey_announcement(speech_text, chime=None):
             "device": VOICEMONKEY_DEVICE,
             "speech": speech_text
         }
-        if chime:
-            payload["chime"] = chime
 
         headers = {
             "Authorization": f"Bearer {VOICEMONKEY_TOKEN}",
@@ -161,7 +159,7 @@ def send_voicemonkey_announcement(speech_text, chime=None):
         }
         response = requests.post(url, json=payload, headers=headers, timeout=5)
         if response.status_code in [200, 201, 204]:
-            print(f"  ✅ VoiceMonkey announcement sent: '{speech_text}'" + (f" with chime '{chime}'" if chime else ""))
+            print(f"  ✅ VoiceMonkey announcement sent: '{speech_text}'")
         else:
             print(f"  ⚠️ VoiceMonkey announcement failed: HTTP {response.status_code} - {response.text}")
     except Exception as e:
@@ -296,10 +294,9 @@ def main():
                     # Re-fetch records to reflect updates for TRMNL rendering
                     records = table.all()
                     print("✅ Successfully marked all due plants as watered in Airtable!")
-                    send_voicemonkey_announcement(
-                        get_watered_announcement(len(flic_updates)),
-                        chime="soundbank://soundlibrary/water/water_drops_01"
-                    )
+                    raw_msg = get_watered_announcement(len(flic_updates))
+                    ssml_msg = f'<speak><audio src="soundbank://soundlibrary/water/water_drops_01"/>{raw_msg}</speak>'
+                    send_voicemonkey_announcement(ssml_msg)
                 except Exception as e:
                     print(f"Failed to update Airtable for Flic trigger: {e}")
             else:
