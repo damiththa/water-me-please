@@ -1,3 +1,28 @@
+async function sendVoiceMonkeyAnnouncement(env, speechText) {
+  if (!env.VOICEMONKEY_TOKEN || !env.VOICEMONKEY_DEVICE) {
+    console.warn("VoiceMonkey token or device not configured.");
+    return { configured: false };
+  }
+  try {
+    const res = await fetch("https://api-v3.voicemonkey.io/announce", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.VOICEMONKEY_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: env.VOICEMONKEY_TOKEN,
+        device: env.VOICEMONKEY_DEVICE,
+        speech: speechText,
+      }),
+    });
+    return { configured: true, status: res.status, ok: res.ok };
+  } catch (err) {
+    console.error(`VoiceMonkey fetch error: ${err.message}`);
+    return { configured: true, error: err.message };
+  }
+}
+
 export default {
   async fetch(request, env) {
     if (request.method !== "POST" && request.method !== "GET") {
@@ -44,18 +69,11 @@ export default {
       if (!isMatch) {
         console.log(`Screen check failed. Active screen '${filename}' did not match plugin ID '${pluginId}'.`);
 
-        // Announce immediately via VoiceMonkey and abort!
-        if (env.VOICEMONKEY_TOKEN && env.VOICEMONKEY_DEVICE) {
-          await fetch("https://api-v3.voicemonkey.io/announce", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              token: env.VOICEMONKEY_TOKEN,
-              device: env.VOICEMONKEY_DEVICE,
-              speech: "Oops! Looks like the plant dashboard isn't on your screen. Try it when it is ON",
-            }),
-          });
-        }
+        // Announce immediately via VoiceMonkey with Bearer authorization and abort!
+        const vmResult = await sendVoiceMonkeyAnnouncement(
+          env,
+          "Oops! Looks like the plant dashboard isn't on your screen. Try it when it is ON"
+        );
 
         return new Response(
           JSON.stringify({
@@ -63,6 +81,7 @@ export default {
             reason: "wrong_screen",
             active_screen: filename,
             expected_plugin: pluginId,
+            voicemonkey: vmResult,
           }),
           {
             status: 200,
@@ -74,18 +93,11 @@ export default {
       // 3. SCREEN VERIFIED!
       console.log("Screen context verified successfully.");
 
-      // A. Instant VoiceMonkey confirmation (<1 second)
-      if (env.VOICEMONKEY_TOKEN && env.VOICEMONKEY_DEVICE) {
-        await fetch("https://api-v3.voicemonkey.io/announce", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token: env.VOICEMONKEY_TOKEN,
-            device: env.VOICEMONKEY_DEVICE,
-            speech: "Working on watering your plants now, this might take a bit of time",
-          }),
-        });
-      }
+      // A. Instant VoiceMonkey confirmation (<1 second) with Bearer authorization
+      const vmResult = await sendVoiceMonkeyAnnouncement(
+        env,
+        "Working on watering your plants now, this might take a bit of time"
+      );
 
       // B. Dispatch GitHub Actions to perform Airtable updates & TRMNL refresh
       const ghRepo = env.GITHUB_REPO || "damiththa/water-me-please";
@@ -106,6 +118,7 @@ export default {
           status: "dispatched",
           event_type: eventType,
           github_dispatch_status: ghRes.status,
+          voicemonkey: vmResult,
         }),
         {
           status: 200,
