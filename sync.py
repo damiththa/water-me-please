@@ -294,9 +294,7 @@ def main():
                     # Re-fetch records to reflect updates for TRMNL rendering
                     records = table.all()
                     print("✅ Successfully marked all due plants as watered in Airtable!")
-                    raw_msg = get_watered_announcement(len(flic_updates))
-                    ssml_msg = f'<speak><audio src="soundbank://soundlibrary/water/water_drops_01"/>{raw_msg}</speak>'
-                    send_voicemonkey_announcement(ssml_msg)
+                    send_voicemonkey_announcement(get_watered_announcement(len(flic_updates)))
                 except Exception as e:
                     print(f"Failed to update Airtable for Flic trigger: {e}")
             else:
