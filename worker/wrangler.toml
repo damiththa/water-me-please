@@ -10,6 +10,7 @@ name = "water-me-please"
 [env.production.vars]
 GITHUB_REPO = "damiththa/water-me-please"
 EVENT_TYPE = "flic_water_all"
+# TRMNL Grey Plant Dashboard ID: 9ef7c4
 
 [env.dev]
 name = "water-me-please-dev"
