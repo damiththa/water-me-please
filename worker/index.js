@@ -5,18 +5,13 @@ export default {
     }
 
     try {
-      // 1. Determine environment via URI query parameter (?env=dev)
-      const url = new URL(request.url);
-      const isDev = url.searchParams.get("env") === "dev";
+      const trmnlKey = env.TRMNL_DEVICE_API_KEY;
+      const pluginId = env.TRMNL_PLUGIN_ID;
+      const eventType = env.EVENT_TYPE || "flic_water_all_dev";
 
-      // If specific _DEV / _PROD secrets exist, use them; otherwise use the environment-injected secret
-      const trmnlKey = env.TRMNL_DEVICE_API_KEY || (isDev ? env.TRMNL_DEVICE_API_KEY_DEV : env.TRMNL_DEVICE_API_KEY_PROD);
-      const pluginId = env.TRMNL_PLUGIN_ID || (isDev ? (env.TRMNL_PLUGIN_ID_DEV || "65837e") : env.TRMNL_PLUGIN_ID_PROD);
-      const eventType = isDev ? "flic_water_all_dev" : (url.searchParams.get("env") === "prod" ? "flic_water_all" : (env.EVENT_TYPE || "flic_water_all_dev"));
+      console.log(`Processing Flic trigger for event: ${eventType}`);
 
-      console.log(`Processing request for environment: ${isDev ? "DEVELOPMENT" : "PRODUCTION"}`);
-
-      // 2. Query TRMNL current display API (Checks active screen in ~100ms)
+      // 1. Query TRMNL current display API (Checks active screen in ~100ms)
       let filename = "";
       if (trmnlKey) {
         try {
@@ -36,10 +31,9 @@ export default {
         }
       }
 
-      // 3. Verify screen context
+      // 2. Verify screen context
       let isMatch = false;
       if (!trmnlKey) {
-        // If no device key is provided, bypass check safely
         isMatch = true;
       } else if (pluginId) {
         isMatch = filename.includes(pluginId.toLowerCase());
@@ -77,7 +71,7 @@ export default {
         );
       }
 
-      // 4. SCREEN VERIFIED!
+      // 3. SCREEN VERIFIED!
       console.log("Screen context verified successfully.");
 
       // A. Instant VoiceMonkey confirmation (<1 second)
@@ -110,7 +104,6 @@ export default {
       return new Response(
         JSON.stringify({
           status: "dispatched",
-          environment: isDev ? "development" : "production",
           event_type: eventType,
           github_dispatch_status: ghRes.status,
         }),

@@ -141,7 +141,7 @@ VOICEMONKEY_TOKEN = os.getenv("VOICEMONKEY_TOKEN")
 VOICEMONKEY_DEVICE = os.getenv("VOICEMONKEY_DEVICE")
 
 def send_voicemonkey_announcement(speech_text):
-    """Send a dynamic TTS announcement to VoiceMonkey."""
+    """Send a dynamic TTS announcement to VoiceMonkey (supports SSML tags)."""
     if not VOICEMONKEY_TOKEN or not VOICEMONKEY_DEVICE:
         print("  ℹ️  VoiceMonkey token or device not configured. Skipping announcement.")
         return
@@ -152,6 +152,7 @@ def send_voicemonkey_announcement(speech_text):
             "device": VOICEMONKEY_DEVICE,
             "speech": speech_text
         }
+
         headers = {
             "Authorization": f"Bearer {VOICEMONKEY_TOKEN}",
             "Content-Type": "application/json"
