@@ -58,7 +58,7 @@ export default {
             body: JSON.stringify({
               token: env.VOICEMONKEY_TOKEN,
               device: env.VOICEMONKEY_DEVICE,
-              speech: "Oops! Looks like the plant dashboard isn't on your screen. Switch to it and try again!",
+              speech: "Oops! Looks like the plant dashboard isn't on your screen. Try it when it is ON",
             }),
           });
         }
@@ -88,7 +88,7 @@ export default {
           body: JSON.stringify({
             token: env.VOICEMONKEY_TOKEN,
             device: env.VOICEMONKEY_DEVICE,
-            speech: "Watering your plants now! Updating your display.",
+            speech: "Working on watering your plants now!",
           }),
         });
       }
