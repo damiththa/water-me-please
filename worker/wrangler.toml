@@ -5,3 +5,5 @@ compatibility_date = "2024-09-01"
 [vars]
 GITHUB_REPO = "damiththa/water-me-please"
 TRMNL_PLUGIN_ID_DEV = "65837e"
+# Updated plugin ID for TRMNL Black
+
